@@ -8,7 +8,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import {Button} from 'native-base';
-import {auth} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import styles from './SigninStyles';
 import {Api} from '../../services/Api';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, Thumbnail, H1, ListItem, List, Button} from 'native-base';
 import {Colors} from '../../theme/Theme';
-import {auth} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 
 export default class ProfileScreen extends React.Component {
   signout = () => {

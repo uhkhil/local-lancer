@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, Alert, Text, ActivityIndicator} from 'react-native';
 import {Button} from 'native-base';
-import {auth} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import styles from './SingupStyles';
 import {Api} from '../../services/Api';
 
