@@ -1,40 +1,35 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
-import { Container, Text } from 'native-base';
-import { Api } from '../../services/Api';
+import {Container, Text} from 'native-base';
+import {Api} from '../../services/Api';
+import {Wrapper} from '../../hocs/Wrapper';
 
-export class ProfileEditScreen extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            output: ''
-        }
-    }
+class ProfileEdit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      output: '',
+    };
+    this.fetchUserProfile(props.context.user._id);
+  }
 
-    fetchUserProfile = (userId) => {
-        Api.getFreelancerProfile(userId).then(res => {
-            const data = res.data;
-            console.log('TCL: EditProfileScreen -> fetchUserProfile -> data', data);
-            this.setState({ output: JSON.stringify(data, null, 2) })
-        })
-    }
+  fetchUserProfile = userId => {
+    Api.getFreelancerProfile(userId).then(res => {
+      const data = res.data;
+      this.setState({output: JSON.stringify(data, null, 2)});
+    });
+  };
 
-    async componentDidMount() {
-        const userId = await AsyncStorage.getItem('_id');
-        console.log('TCL: EditProfileScreen -> componentDidMount -> userId', userId);
-        this.fetchUserProfile(userId);
-    }
-
-    render() {
-        return <Container>
-            <Text>
-                Edit profile page
-            </Text>
-            <Text>
-                Response:
-
-            {this.state.output}
-            </Text>
-        </Container>
-    }
+  render() {
+    return (
+      <Container>
+        <Text>Edit profile page</Text>
+        <Text>
+          Response:
+          {this.state.output}
+        </Text>
+      </Container>
+    );
+  }
 }
+
+export const ProfileEditScreen = Wrapper(ProfileEdit);
