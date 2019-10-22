@@ -26,7 +26,11 @@ class SigninScreen extends React.Component {
   };
 
   signin = async () => {
-    const {password, email} = this.state;
+    // const {password, email} = this.state;
+    const {password, email} = {
+      password: 'password',
+      email: 'akhilnareshkumar@gmail.com',
+    };
     if (!email || !password) {
       Alert.alert("Nope, can't do", 'No empty emails / passwords');
       return;

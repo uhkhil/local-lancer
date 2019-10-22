@@ -1,4 +1,4 @@
 export const AppRole = {
-    recruiter: 1,
-    freelancer: 2
+  recruiter: 1,
+  freelancer: 2,
 };

@@ -1,17 +1,23 @@
 import React from 'react';
-import {View, Text, Button} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {Auth} from '../../services/Auth';
+import {Wrapper} from '../../hocs/Wrapper';
 
 class AuthLoadingScreen extends React.Component {
-  componentDidMount() {
-    console.log('heh');
+  constructor(props) {
+    super(props);
+    console.log('TCL: AuthLoadingScreen -> constructor -> props', props);
+  }
+
+  async componentDidMount() {
     this.authStateSubscriber = auth().onAuthStateChanged(async user => {
       console.log('TCL: AuthLoadingScreen -> componentDidMount -> user', user);
-      // if (user) {
-      //   const storedUserInfoKeys = await AsyncStorage.getAllKeys();
-      //   storedUserInfoKeys.map()
-      // }
-      this.props.navigation.navigate(user ? 'Home' : 'Auth');
+      if (!user) {
+        this.props.navigation.navigate('Auth');
+      } else {
+        await Auth.postAuth(user.uid, this.props.context);
+        this.props.navigation.navigate('Home');
+      }
     });
   }
 
@@ -28,16 +34,9 @@ class AuthLoadingScreen extends React.Component {
   };
 
   render() {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Splash screen</Text>
-
-        <Button onPress={this.navigateToSignin} title="Not signed in" />
-
-        <Button onPress={this.navigateToHome} title="Already signed in" />
-      </View>
-    );
+    // TODO: Add splashscreen / loader
+    return null;
   }
 }
 
-export default AuthLoadingScreen;
+export default Wrapper(AuthLoadingScreen);

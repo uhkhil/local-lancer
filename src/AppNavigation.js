@@ -1,5 +1,6 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import React from 'react';
 
 import AuthLoadingScreen from './screens/AuthLoading/AuthLoading';
 import AuthScreen from './screens/Auth/Auth';
@@ -15,6 +16,8 @@ import PortfolioScreen from './screens/Portfolio/Portfolio';
 import ProjectAddScreen from './screens/ProjectAdd/ProjectAdd';
 import {ProfileEditScreen} from './screens/ProfileEdit/ProfileEdit';
 import {ProjectListScreen} from './screens/ProjectList/ProjectList';
+import {UserContext} from './context/UserContext';
+import {AppWrapper} from './hocs/Wrapper';
 
 const AppStack = createStackNavigator(
   {
@@ -56,4 +59,6 @@ const AppNavigator = createSwitchNavigator(
   },
 );
 
-export default createAppContainer(AppNavigator);
+const AppContainer = createAppContainer(AppNavigator);
+
+export default AppWrapper(AppContainer);

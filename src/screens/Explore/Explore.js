@@ -1,65 +1,18 @@
 import React from 'react';
 import {View, Image} from 'react-native';
-import {
-  Text,
-  Container,
-  Button,
-  DeckSwiper,
-  Card,
-  CardItem,
-  Left,
-  Body,
-  Thumbnail,
-  Icon,
-} from 'native-base';
+import {Text, Button, DeckSwiper, Icon, Thumbnail, Badge} from 'native-base';
 import styles from './ExploreStyles';
-import Axios from 'axios';
+import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
+import {Api} from '../../services/Api';
+import {Wrapper} from '../../hocs/Wrapper';
 
-const cards = [
-  {
-    image: 'https://lorempixel.com/400/400/people/1',
-    text: 'Test this',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/2',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/3',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/4',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/5',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/6',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/7',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-  {
-    image: 'https://lorempixel.com/400/400/people/8',
-    text: 'Test this too',
-    name: 'Lorem Ipsum',
-  },
-];
-export default class ExploreScreen extends React.Component {
+class ExploreScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      image: 'https://lorempixel.com/400/400/people/3',
+      projects: [],
+    };
   }
 
   viewProfile = () => {
@@ -70,57 +23,55 @@ export default class ExploreScreen extends React.Component {
     this.props.navigation.navigate('ChatList');
   };
 
+  fetchProjects = async () => {
+    const response = await Api.exploreProjects(this.props.context.user._id);
+    console.log('TCL: ExploreScreen -> fetchProjects -> response', response);
+    this.setState({projects: response.data.data});
+  };
+
+  componentDidMount() {
+    this.fetchProjects();
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.topPanel}>
           <Button
             rounded
+            transparent
             style={styles.profileBtn}
-            onPress={() => this.viewProfile()}>
+            onPress={this.viewProfile}>
+            <Thumbnail source={{uri: this.state.image}} />
+          </Button>
+          <Button
+            rounded
+            transparent
+            onPress={this.viewDMs}
+            style={styles.dmBtn}>
             <Icon
               type="MaterialIcons"
-              name="person"
-              style={styles.profileIcon}
+              style={styles.dmIcon}
+              name="mail"
+              onPress={this.viewDMs}
             />
+            <Badge primary style={styles.dmBadge}>
+              <Text>2</Text>
+            </Badge>
           </Button>
-          <Icon
-            type="MaterialIcons"
-            name="mail"
-            style={styles.dmBtn}
-            onPress={this.viewDMs}
-          />
         </View>
 
         <View style={styles.deckContainer}>
-          <DeckSwiper
-            dataSource={cards}
-            renderItem={item => (
-              <Card style={styles.card}>
-                <CardItem>
-                  <Left>
-                    <Thumbnail source={{uri: item.image}} />
-                    <Body>
-                      <Text>{item.text}</Text>
-                      <Text note>NativeBase</Text>
-                    </Body>
-                  </Left>
-                </CardItem>
-                <CardItem cardBody>
-                  <Image
-                    style={{height: 200, flex: 1}}
-                    source={{uri: item.image}}
-                  />
-                </CardItem>
-                <CardItem>
-                  <Icon name="heart" style={{color: '#ED4A6A'}} />
-                  <Text>{item.name}</Text>
-                </CardItem>
-              </Card>
-            )}
-          />
+          {this.state.projects.length ? (
+            <DeckSwiper
+              dataSource={this.state.projects}
+              renderItem={item => <ProjectCard data={item} />}
+            />
+          ) : null}
         </View>
       </View>
     );
   }
 }
+
+export default Wrapper(ExploreScreen);
