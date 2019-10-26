@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "729838792209",
+    "firebase_url": "https://locallancer.firebaseio.com",
+    "project_id": "locallancer",
+    "storage_bucket": "locallancer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729838792209:android:c3e22e9cafa6060f",
+        "android_client_info": {
+          "package_name": "com.locallancer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729838792209-luvcaphtdoh165u21u14ucibl11peh3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2v0BHpk4qmqUltFg3gQBMS75vy03wdxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729838792209-luvcaphtdoh165u21u14ucibl11peh3m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
