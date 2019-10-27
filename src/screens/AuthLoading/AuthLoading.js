@@ -16,7 +16,10 @@ class AuthLoadingScreen extends React.Component {
         this.props.navigation.navigate('Auth');
       } else {
         await Auth.postAuth(user.uid, this.props.context);
-        this.props.navigation.navigate('Home');
+        await Auth.checkNavigationFlow(
+          this.props.context,
+          this.props.navigation,
+        );
       }
     });
   }

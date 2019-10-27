@@ -11,16 +11,13 @@ const signIn = async (data, context) => {
       case 'email':
         const {email, password} = data;
         const result = await auth().signInWithEmailAndPassword(email, password);
-        console.log('TCL: signIn -> result', result);
         firebaseId = result.user.uid;
         // TODO: Use the token
         const token = await result.user.getIdToken();
     }
     await postAuth(firebaseId, context);
-    console.log('TCL: data', data);
     return true;
   } catch (err) {
-    console.log('TCL: signIn -> err', err);
     return false;
   }
 };
@@ -28,7 +25,6 @@ const signIn = async (data, context) => {
 const signOut = () => {};
 
 const storeUserInfo = (context, data) => {
-  console.log('TCL: storeUserInfo -> context, data', context, data);
   context.setUserFields(data);
 };
 
@@ -40,12 +36,9 @@ const storeUserInfo = (context, data) => {
  * @return {void} Returns promise of nothing
  */
 const postAuth = async (firebaseId, context) => {
-  console.log('TCL: postAuth -> firebaseId, context', firebaseId, context);
   try {
-    console.log('TCL: firebaseId', firebaseId);
     const res = await Api.getUserInfo(firebaseId);
     const userInfo = res.data.data[0];
-    console.log('TCL: postAuth -> res', res);
     storeUserInfo(context, userInfo);
   } catch (err) {
     console.warn(err);
@@ -53,7 +46,18 @@ const postAuth = async (firebaseId, context) => {
 };
 
 const checkNavigationFlow = async (context, navigation) => {
-  navigation.navigate('Home');
+  const user = context.user;
+  if (user.freelancerProfile) {
+    navigation.navigate('Home');
+    return;
+  } else if (user.recruiterProfile) {
+    // TODO: Handle this flow for recruiters
+    navigation.navigate('Home');
+    return;
+  } else {
+    navigation.navigate('ProfileSetup');
+    return;
+  }
 };
 
 export const Auth = {
