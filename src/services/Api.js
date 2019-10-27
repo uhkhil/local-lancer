@@ -25,6 +25,8 @@ const swipeProject = (userId, projectId, response) =>
       response,
     },
   });
+const exploreFreelancers = userId =>
+  Axios.get(`${baseUrl}/exploreFreelancers?userId=${userId}`);
 
 export const Api = {
   signedUpWithEmail,
@@ -36,4 +38,5 @@ export const Api = {
   getProjects,
   exploreProjects,
   swipeProject,
+  exploreFreelancers,
 };
