@@ -54,7 +54,7 @@ class ProjectAdd extends React.Component {
       selectedDomains: [],
       days: 1,
     };
-    this.user = this.props.context.user;
+    this.user = this.props.userContext.user;
     this.updateList = this.props.navigation.getParam('updateList');
   }
 

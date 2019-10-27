@@ -3,7 +3,6 @@ import {Colors} from '../../theme/Theme';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.primaryColor,
     flex: 1,
   },
   topPanel: {

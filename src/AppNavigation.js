@@ -1,6 +1,5 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import React from 'react';
 
 import AuthLoadingScreen from './screens/AuthLoading/AuthLoading';
 import AuthScreen from './screens/Auth/Auth';
@@ -8,7 +7,6 @@ import SignupScreen from './screens/Signup/Signup';
 import SigninScreen from './screens/Signin/Signin';
 import ProfileSetupScreen from './screens/ProfileSetup/ProfileSetup';
 import ChatListScreen from './screens/ChatList/ChatList';
-import ExploreScreen from './screens/Explore/Explore';
 import ChatWindowScreen from './screens/ChatWindow/ChatWindow';
 import ProfileScreen from './screens/Profile/Profile';
 import AboutScreen from './screens/About/About';
@@ -16,12 +14,12 @@ import PortfolioScreen from './screens/Portfolio/Portfolio';
 import ProjectAddScreen from './screens/ProjectAdd/ProjectAdd';
 import {ProfileEditScreen} from './screens/ProfileEdit/ProfileEdit';
 import {ProjectListScreen} from './screens/ProjectList/ProjectList';
-import {UserContext} from './context/UserContext';
 import {AppWrapper} from './hocs/Wrapper';
+import HomeScreen from './screens/Home/Home';
 
 const AppStack = createStackNavigator(
   {
-    Home: ExploreScreen,
+    Home: HomeScreen,
     MyProfile: ProfileScreen,
     ProfileEdit: ProfileEditScreen,
     MyPortfolio: PortfolioScreen,

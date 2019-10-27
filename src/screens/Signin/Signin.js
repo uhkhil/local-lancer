@@ -21,7 +21,7 @@ class SigninScreen extends React.Component {
   signin = async () => {
     let {password, email} = this.state;
     if (!email) {
-      email = 'akhilnareshkumar@gmail.com';
+      email = 'akhilnareshkumar+r0@gmail.com';
       password = 'password';
     }
     if (!email || !password) {
@@ -35,7 +35,7 @@ class SigninScreen extends React.Component {
         email,
         password,
       },
-      this.props.context,
+      this.props.userContext,
     );
     if (!result) {
       Alert.alert(
@@ -45,7 +45,7 @@ class SigninScreen extends React.Component {
       this.setState({loading: false});
       return;
     }
-    Auth.checkNavigationFlow(this.props.context, this.props.navigation);
+    Auth.checkNavigationFlow(this.props.userContext, this.props.navigation);
   };
 
   render() {

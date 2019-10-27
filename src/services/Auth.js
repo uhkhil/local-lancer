@@ -3,7 +3,7 @@ import auth from '@react-native-firebase/auth';
 
 const signUp = data => {};
 
-const signIn = async (data, context) => {
+const signIn = async (data, userContext) => {
   try {
     const {type} = data;
     let firebaseId;
@@ -15,7 +15,7 @@ const signIn = async (data, context) => {
         // TODO: Use the token
         const token = await result.user.getIdToken();
     }
-    await postAuth(firebaseId, context);
+    await postAuth(firebaseId, userContext);
     return true;
   } catch (err) {
     return false;
@@ -24,37 +24,49 @@ const signIn = async (data, context) => {
 
 const signOut = () => {};
 
-const storeUserInfo = (context, data) => {
-  context.setUserFields(data);
+const storeUserInfo = (userContext, data) => {
+  userContext.setUserFields(data);
 };
 
 /**
- * Fetches user information from the database and stores it in the context.
+ * Fetches user information from the database and stores it in the userContext.
  *
  * @param {string} firebaseId - The firebase uid for the user
- * @param {object} context - The user context which will be used to store the user's information
+ * @param {object} userContext - The user userContext which will be used to store the user's information
  * @return {void} Returns promise of nothing
  */
-const postAuth = async (firebaseId, context) => {
+const postAuth = async (firebaseId, userContext) => {
   try {
     const res = await Api.getUserInfo(firebaseId);
     const userInfo = res.data.data[0];
-    storeUserInfo(context, userInfo);
+    storeUserInfo(userContext, userInfo);
   } catch (err) {
     console.warn(err);
   }
 };
 
-const checkNavigationFlow = async (context, navigation) => {
-  const user = context.user;
+const checkNavigationFlow = async (userContext, navigation) => {
+  const user = userContext.user;
+  console.log('TCL: checkNavigationFlow -> user', user);
+  console.log(
+    'TCL: checkNavigationFlow -> user.freelancerProfile',
+    user.freelancerProfile,
+  );
+  console.log(
+    'TCL: checkNavigationFlow -> user.recruiterProfile',
+    user.recruiterProfile,
+  );
   if (user.freelancerProfile) {
+    userContext.setUserMode(0);
     navigation.navigate('Home');
     return;
   } else if (user.recruiterProfile) {
     // TODO: Handle this flow for recruiters
+    userContext.setUserMode(1);
     navigation.navigate('Home');
     return;
   } else {
+    console.log('profile setup page');
     navigation.navigate('ProfileSetup');
     return;
   }

@@ -24,7 +24,7 @@ class ProjectList extends React.Component {
     this.state = {
       projects: [],
     };
-    this.user = this.props.context.user;
+    this.user = this.props.userContext.user;
   }
 
   componentDidMount() {

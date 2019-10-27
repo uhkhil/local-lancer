@@ -1,12 +1,14 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, ToastAndroid} from 'react-native';
 import {Text, Button, DeckSwiper, Icon, Thumbnail, Badge} from 'native-base';
-import styles from './ExploreStyles';
+import styles from './HomeStyles';
 import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
 import {Api} from '../../services/Api';
 import {Wrapper} from '../../hocs/Wrapper';
+import {AppRole} from '../../enums/AppRole';
+import {Colors} from '../../theme/Theme';
 
-class ExploreScreen extends React.Component {
+class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,8 +26,8 @@ class ExploreScreen extends React.Component {
   };
 
   fetchProjects = async () => {
-    const response = await Api.exploreProjects(this.props.context.user._id);
-    console.log('TCL: ExploreScreen -> fetchProjects -> response', response);
+    const response = await Api.exploreProjects(this.props.userContext.user._id);
+    console.log('TCL: HomeScreen -> fetchProjects -> response', response);
     this.setState({projects: response.data.data});
   };
 
@@ -34,20 +36,30 @@ class ExploreScreen extends React.Component {
   }
 
   giveResponse = async (projectId, response) => {
-    const userId = this.props.context.user._id;
+    const userId = this.props.userContext.user._id;
     console.log(
-      'TCL: ExploreScreen -> giveResponse -> userId, projectId, response',
+      'TCL: HomeScreen -> giveResponse -> userId, projectId, response',
       userId,
       projectId,
       response,
     );
     const result = await Api.swipeProject(userId, projectId, response);
-    console.log('TCL: ExploreScreen -> giveResponse -> result', result);
+    ToastAndroid.show('User response has been logged.', ToastAndroid.SHORT);
+    console.log('TCL: HomeScreen -> giveResponse -> result', result);
   };
 
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor:
+              this.props.userContext.userMode === AppRole.freelancer
+                ? Colors.freelancerPrimary
+                : Colors.recruiterPrimary,
+          },
+        ]}>
         <View style={styles.topPanel}>
           <Button
             rounded
@@ -88,4 +100,4 @@ class ExploreScreen extends React.Component {
   }
 }
 
-export default Wrapper(ExploreScreen);
+export default Wrapper(HomeScreen);
