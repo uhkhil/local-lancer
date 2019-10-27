@@ -17,6 +17,14 @@ const getProjects = userId =>
   Axios.get(`${baseUrl}/getProjects?userId=${userId}`);
 const exploreProjects = userId =>
   Axios.get(`${baseUrl}/exploreProjects?userId=${userId}`);
+const swipeProject = (userId, projectId, response) =>
+  Axios.get(`${baseUrl}/swipeProject`, {
+    params: {
+      userId,
+      projectId,
+      response,
+    },
+  });
 
 export const Api = {
   signedUpWithEmail,
@@ -27,4 +35,5 @@ export const Api = {
   createProject,
   getProjects,
   exploreProjects,
+  swipeProject,
 };

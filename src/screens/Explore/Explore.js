@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View} from 'react-native';
 import {Text, Button, DeckSwiper, Icon, Thumbnail, Badge} from 'native-base';
 import styles from './ExploreStyles';
 import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
@@ -33,6 +33,18 @@ class ExploreScreen extends React.Component {
     this.fetchProjects();
   }
 
+  giveResponse = async (projectId, response) => {
+    const userId = this.props.context.user._id;
+    console.log(
+      'TCL: ExploreScreen -> giveResponse -> userId, projectId, response',
+      userId,
+      projectId,
+      response,
+    );
+    const result = await Api.swipeProject(userId, projectId, response);
+    console.log('TCL: ExploreScreen -> giveResponse -> result', result);
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -65,7 +77,9 @@ class ExploreScreen extends React.Component {
           {this.state.projects.length ? (
             <DeckSwiper
               dataSource={this.state.projects}
-              renderItem={item => <ProjectCard data={item} />}
+              renderItem={item => (
+                <ProjectCard data={item} giveResponse={this.giveResponse} />
+              )}
             />
           ) : null}
         </View>

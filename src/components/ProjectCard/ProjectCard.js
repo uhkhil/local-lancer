@@ -90,10 +90,22 @@ class ProjectCardComponent extends React.Component {
           </CardItem>
           <CardItem style={styles.cardItemBottom} footer bordered>
             <Left>
-              <Button transparent>
+              <Button
+                transparent
+                onPress={this.props.giveResponse.bind(
+                  null,
+                  this.props.data._id,
+                  true,
+                )}>
                 <Text>Accept</Text>
               </Button>
-              <Button transparent>
+              <Button
+                transparent
+                onPress={this.props.giveResponse.bind(
+                  null,
+                  this.props.data._id,
+                  false,
+                )}>
                 <Text>Reject</Text>
               </Button>
             </Left>
