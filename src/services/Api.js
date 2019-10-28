@@ -27,6 +27,23 @@ const swipeProject = (userId, projectId, response) =>
   });
 const exploreFreelancers = userId =>
   Axios.get(`${baseUrl}/exploreFreelancers?userId=${userId}`);
+const swipeFreelancer = (userId, projectId, freelancerId, response) => {
+  console.log(
+    'TCL: userId, projectId, freelancerId, response',
+    userId,
+    projectId,
+    freelancerId,
+    response,
+  );
+  return Axios.get(`${baseUrl}/swipeFreelancer`, {
+    params: {
+      userId,
+      projectId,
+      freelancerId,
+      response,
+    },
+  });
+};
 
 export const Api = {
   signedUpWithEmail,
@@ -39,4 +56,5 @@ export const Api = {
   exploreProjects,
   swipeProject,
   exploreFreelancers,
+  swipeFreelancer,
 };

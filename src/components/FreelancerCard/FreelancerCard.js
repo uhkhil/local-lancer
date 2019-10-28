@@ -64,11 +64,11 @@ class FreelancerCardComponent extends React.Component {
           alignSelf: 'center',
         }}>
         <Card style={styles.card}>
-          <CardItem style={styles.cardItemTop} header>
+          {/* <CardItem style={styles.cardItemTop} header>
             <H1 onPress={this.toggleExpansion} style={styles.title}>
               {this.props.data.title}
             </H1>
-          </CardItem>
+          </CardItem> */}
           <CardItem>
             {this.props.data.domains.map(domain => (
               <Button rounded info small>
@@ -91,8 +91,9 @@ class FreelancerCardComponent extends React.Component {
                 transparent
                 onPress={this.props.giveResponse.bind(
                   null,
-                  this.props.data._id,
+                  this.props.projectId,
                   true,
+                  this.props.data._id,
                 )}>
                 <Text>Accept</Text>
               </Button>
@@ -100,8 +101,9 @@ class FreelancerCardComponent extends React.Component {
                 transparent
                 onPress={this.props.giveResponse.bind(
                   null,
-                  this.props.data._id,
+                  this.props.projectId,
                   false,
+                  this.props.data._id,
                 )}>
                 <Text>Reject</Text>
               </Button>

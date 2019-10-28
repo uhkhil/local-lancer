@@ -48,15 +48,31 @@ class HomeScreen extends React.Component {
     this.fetchCards();
   }
 
-  giveResponse = async (projectId, response) => {
+  giveResponse = async (projectId, response, freelancerId = null) => {
     const userId = this.props.userContext.user._id;
+    const userMode = this.props.userContext.userMode;
     console.log(
       'TCL: HomeScreen -> giveResponse -> userId, projectId, response',
       userId,
       projectId,
       response,
     );
-    const result = await Api.swipeProject(userId, projectId, response);
+    let result;
+    switch (userMode) {
+      case AppRole.freelancer:
+        result = await Api.swipeProject(userId, projectId, response);
+        break;
+      case AppRole.recruiter:
+        result = await Api.swipeFreelancer(
+          userId,
+          projectId,
+          freelancerId,
+          response,
+        );
+        break;
+      default:
+        console.warn('Unknown userMode');
+    }
     ToastAndroid.show('User response has been logged.', ToastAndroid.SHORT);
     console.log('TCL: HomeScreen -> giveResponse -> result', result);
   };
