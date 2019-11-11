@@ -1,16 +1,13 @@
 import React from 'react';
 import {View, TextInput, Alert, Text, ActivityIndicator} from 'react-native';
 import {Button} from 'native-base';
-import auth from '@react-native-firebase/auth';
 import styles from './SingupStyles';
-import {Api} from '../../services/Api';
+import {Auth} from '../../services/Auth';
 
 class SignupScreen extends React.Component {
   state = {
-    username: '',
     password: '',
     email: '',
-    phone_number: '',
     loading: false,
   };
   onChangeText = (key, val) => {
@@ -24,33 +21,13 @@ class SignupScreen extends React.Component {
       return;
     }
     this.setState({loading: true});
-    try {
-      await auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          const body = {email};
-          Api.signedUpWithEmail(body)
-            .then(res => {
-              console.log('TCL: SignupScreen -> signup -> res', res);
-              this.props.navigation.navigate('Signin');
-            })
-            .catch(err => {
-              console.log('TCL: SignupScreen -> signup -> err', err);
-            });
-        })
-        .catch(error => {
-          console.log('TCL: SignupScreen -> signUp -> error', error);
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          Alert.alert('Something went wrong', error.message);
-        })
-        .finally(() => {
-          this.setState({loading: false});
-        });
-    } catch (err) {
-      console.log('error signing up: ', err);
-      Alert.alert('Something went wrong', 'Please try again later.');
+    const result = await Auth.signUp({email, password});
+    this.setState({loading: false});
+    if (!result.status) {
+      Alert.alert('Something went wrong', result.message);
+      return;
     }
+    this.props.navigation.navigate('Signin');
   };
 
   render() {

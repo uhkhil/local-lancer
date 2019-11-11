@@ -2,10 +2,9 @@ import Axios from 'axios';
 
 const baseUrl = 'https://local-lancer.herokuapp.com/api';
 
-const signedUpWithEmail = data =>
-  Axios.post(`${baseUrl}/signedUpWithEmail`, data);
-const getUserInfo = firebaseId =>
-  Axios.get(`${baseUrl}/getUserInfo?firebaseId=${firebaseId}`);
+const signedUp = data => Axios.post(`${baseUrl}/signedUp`, data);
+const getUserInfo = userId =>
+  Axios.get(`${baseUrl}/getUserInfo?userId=${userId}`);
 const createFreelancerProfile = (userId, data) =>
   Axios.post(`${baseUrl}/createFreelancerProfile?userId=${userId}`, data);
 const getFreelancerProfile = userId =>
@@ -46,7 +45,7 @@ const swipeFreelancer = (userId, projectId, freelancerId, response) => {
 };
 
 export const Api = {
-  signedUpWithEmail,
+  signedUp,
   getUserInfo,
   createFreelancerProfile,
   getFreelancerProfile,

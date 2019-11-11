@@ -60,6 +60,14 @@ class ProfileSetupScreen extends React.PureComponent {
       this.next();
     }, 1000);
     this.userId = this.props.userContext.user._id;
+    console.log(
+      'TCL: ProfileSetupScreen -> componentDidMount -> this.props.userContext',
+      this.props.userContext,
+    );
+    console.log(
+      'TCL: ProfileSetupScreen -> componentDidMount -> this.props.userContext.user',
+      this.props.userContext.user,
+    );
   }
 
   selectRole = role => {
@@ -120,6 +128,7 @@ class ProfileSetupScreen extends React.PureComponent {
   submitProfile = role => {
     console.log('will submit profile');
     console.log('TCL: ProfileSetup -> submitProfile -> role', role);
+
     let body = {};
     if (role === AppRole.recruiter) {
       this.props.userContext.setUserMode(1);
@@ -129,6 +138,7 @@ class ProfileSetupScreen extends React.PureComponent {
         role,
       };
       console.log('TCL: ProfileSetupScreen -> body', body);
+      console.log('TCL: ProfileSetupScreen -> this.userId', this.userId);
       Api.createRecruiterProfile(this.userId, body)
         .then(res => {
           console.log('TCL: ProfileSetup -> submitProfile -> res', res);

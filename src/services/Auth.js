@@ -1,7 +1,23 @@
 import {Api} from './Api';
 import auth from '@react-native-firebase/auth';
 
-const signUp = data => {};
+const signUp = async data => {
+  const {email, password} = data;
+  let credential;
+  try {
+    credential = await auth().createUserWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.warn(error);
+    return {
+      status: false,
+      message: error.toString(),
+    };
+  }
+  const result = await Api.signedUp({email});
+  return {
+    status: true,
+  };
+};
 
 const signIn = async (data, userContext) => {
   try {
@@ -47,15 +63,6 @@ const postAuth = async (firebaseId, userContext) => {
 
 const checkNavigationFlow = async (userContext, navigation) => {
   const user = userContext.user;
-  console.log('TCL: checkNavigationFlow -> user', user);
-  console.log(
-    'TCL: checkNavigationFlow -> user.freelancerProfile',
-    user.freelancerProfile,
-  );
-  console.log(
-    'TCL: checkNavigationFlow -> user.recruiterProfile',
-    user.recruiterProfile,
-  );
   if (user.freelancerProfile) {
     userContext.setUserMode(0);
     navigation.navigate('Home');
@@ -73,6 +80,7 @@ const checkNavigationFlow = async (userContext, navigation) => {
 };
 
 export const Auth = {
+  signUp,
   signIn,
   signOut,
   postAuth,
