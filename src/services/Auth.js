@@ -55,6 +55,7 @@ const postAuth = async (firebaseId, userContext) => {
   try {
     const res = await Api.getUserInfo(firebaseId);
     const userInfo = res.data.data[0];
+    console.log('TCL: postAuth -> userInfo', userInfo);
     storeUserInfo(userContext, userInfo);
   } catch (err) {
     console.warn(err);

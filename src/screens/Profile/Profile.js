@@ -3,8 +3,14 @@ import {StyleSheet, View} from 'react-native';
 import {Text, Thumbnail, H1, ListItem, List, Button} from 'native-base';
 import {Colors} from '../../theme/Theme';
 import auth from '@react-native-firebase/auth';
+import {Wrapper} from '../../hocs/Wrapper';
 
-export default class ProfileScreen extends React.Component {
+class ProfileScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.user = props.userContext.user;
+  }
+
   signout = () => {
     auth()
       .signOut()
@@ -24,7 +30,9 @@ export default class ProfileScreen extends React.Component {
             style={styles.profileImage}
             source={{uri: 'https://lorempixel.com/400/400/people/1'}}
           />
-          <H1 style={styles.name}>Akhil Kumar</H1>
+          <H1 style={styles.name}>
+            {this.user.firstName} {this.user.lastName}
+          </H1>
           <Button
             style={styles.editButton}
             transparent
@@ -109,3 +117,5 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
 });
+
+export default Wrapper(ProfileScreen);

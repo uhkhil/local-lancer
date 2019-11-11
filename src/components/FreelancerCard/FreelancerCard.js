@@ -91,9 +91,9 @@ class FreelancerCardComponent extends React.Component {
                 transparent
                 onPress={this.props.giveResponse.bind(
                   null,
-                  this.props.projectId,
+                  this.props.data.projectId,
                   true,
-                  this.props.data._id,
+                  this.props.data.userId,
                 )}>
                 <Text>Accept</Text>
               </Button>
@@ -101,9 +101,9 @@ class FreelancerCardComponent extends React.Component {
                 transparent
                 onPress={this.props.giveResponse.bind(
                   null,
-                  this.props.projectId,
+                  this.props.data.projectId,
                   false,
-                  this.props.data._id,
+                  this.props.data.userId,
                 )}>
                 <Text>Reject</Text>
               </Button>
