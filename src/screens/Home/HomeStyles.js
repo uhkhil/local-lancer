@@ -27,6 +27,11 @@ const styles = StyleSheet.create({
     // padding: 40
   },
   card: {},
+  loading: {
+    marginTop: 100,
+    alignItems: 'center',
+    alignContent: 'center',
+  },
 });
 
 export default styles;

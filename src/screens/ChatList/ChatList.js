@@ -45,7 +45,7 @@ class ChatListScreen extends React.Component {
         break;
     }
 
-    channelsRef.onSnapshot(
+    this.unsubscribe = channelsRef.onSnapshot(
       snap => {
         const docs = snap.docs;
         const chats = [];
@@ -119,6 +119,10 @@ class ChatListScreen extends React.Component {
         {this.renderList(this.state.chats)}
       </ScrollView>
     );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 }
 

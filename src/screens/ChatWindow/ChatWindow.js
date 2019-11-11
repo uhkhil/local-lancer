@@ -35,15 +35,16 @@ export default class ChatWindowScreen extends React.Component {
       'TCL: ChatWindowScreen -> fetchMessages -> this.channelId',
       this.channelId,
     );
+    const channelRef = firestore()
+      .collection(FIRESTORE.COLLECTIONS.CHANNELS)
+      .doc(this.channelId);
+    console.log(
+      'TCL: ChatWindowScreen -> fetchMessages -> channelRef',
+      channelRef,
+    );
     const messagesRef = firestore()
       .collection(FIRESTORE.COLLECTIONS.MESSAGES)
-      .where(
-        'channelId',
-        '==',
-        firestore()
-          .collection(FIRESTORE.COLLECTIONS.CHANNELS)
-          .doc(this.channelId),
-      );
+      .where('channel', '==', channelRef);
     messagesRef.onSnapshot(snap => {
       const messages = [];
       snap.forEach(doc => {
