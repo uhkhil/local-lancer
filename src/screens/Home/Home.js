@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ToastAndroid} from 'react-native';
+import {View, ToastAndroid, TouchableOpacity} from 'react-native';
 import {Text, Button, DeckSwiper, Icon, Thumbnail, Badge} from 'native-base';
 import {Pulse} from 'react-native-loader';
 
@@ -98,6 +98,19 @@ class HomeScreen extends React.Component {
     console.log('TCL: HomeScreen -> giveResponse -> result', result);
   };
 
+  renderEmpty = () => {
+    const userMode = this.props.userContext.userMode;
+    return (
+      <TouchableOpacity onPress={this.fetchCards} style={styles.empty}>
+        <Text style={styles.emptyText}>
+          {userMode === AppRole.freelancer
+            ? 'No projects around :('
+            : 'No freelancers around :('}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   render() {
     return (
       <View
@@ -152,7 +165,9 @@ class HomeScreen extends React.Component {
                   />
                 )}
               />
-            ) : null}
+            ) : (
+              this.renderEmpty()
+            )}
           </View>
         ) : (
           <View style={styles.deckContainer}>
@@ -167,7 +182,9 @@ class HomeScreen extends React.Component {
                   />
                 )}
               />
-            ) : null}
+            ) : (
+              this.renderEmpty()
+            )}
           </View>
         )}
       </View>

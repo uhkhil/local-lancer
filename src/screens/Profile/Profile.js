@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, Thumbnail, H1, ListItem, List, Button} from 'native-base';
 import {Colors} from '../../theme/Theme';
-import auth from '@react-native-firebase/auth';
 import {Wrapper} from '../../hocs/Wrapper';
+import {Auth} from '../../services/Auth';
 
 class ProfileScreen extends React.Component {
   constructor(props) {
@@ -11,15 +11,9 @@ class ProfileScreen extends React.Component {
     this.user = props.userContext.user;
   }
 
-  signout = () => {
-    auth()
-      .signOut()
-      .then(() => {
-        this.props.navigation.navigate('Auth');
-      })
-      .catch(err => {
-        console.log('TCL: HomeScreen -> signout -> err', err);
-      });
+  signout = async () => {
+    await Auth.signOut(this.props.userContext);
+    this.props.navigation.navigate('Signin');
   };
 
   render() {

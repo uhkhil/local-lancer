@@ -1,5 +1,6 @@
 import {Api} from './Api';
 import auth from '@react-native-firebase/auth';
+import {AppRole} from '../enums/AppRole';
 
 const signUp = async data => {
   const {email, password} = data;
@@ -38,7 +39,16 @@ const signIn = async (data, userContext) => {
   }
 };
 
-const signOut = () => {};
+const signOut = async userContext => {
+  try {
+    userContext.clearUserFields();
+    await auth().signOut();
+    return true;
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
+};
 
 const storeUserInfo = (userContext, data) => {
   userContext.setUserFields(data);
@@ -55,7 +65,6 @@ const postAuth = async (firebaseId, userContext) => {
   try {
     const res = await Api.getUserInfo(firebaseId);
     const userInfo = res.data.data[0];
-    console.log('TCL: postAuth -> userInfo', userInfo);
     storeUserInfo(userContext, userInfo);
   } catch (err) {
     console.warn(err);
@@ -65,18 +74,14 @@ const postAuth = async (firebaseId, userContext) => {
 const checkNavigationFlow = async (userContext, navigation) => {
   const user = userContext.user;
   if (user.freelancerProfile) {
-    userContext.setUserMode(0);
+    userContext.setUserMode(AppRole.freelancer);
     navigation.navigate('Home');
-    return;
   } else if (user.recruiterProfile) {
-    // TODO: Handle this flow for recruiters
-    userContext.setUserMode(1);
+    userContext.setUserMode(AppRole.recruiter);
     navigation.navigate('Home');
-    return;
   } else {
     console.log('profile setup page');
     navigation.navigate('ProfileSetup');
-    return;
   }
 };
 
