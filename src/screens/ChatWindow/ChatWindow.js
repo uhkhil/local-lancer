@@ -1,94 +1,73 @@
 import React from 'react';
-import {
-  GiftedChat,
-  Message,
-  Bubble,
-  InputToolbar,
-} from 'react-native-gifted-chat';
-import {Text} from 'native-base';
+import {GiftedChat, Bubble, InputToolbar} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 
+import {Wrapper} from '../../hocs/Wrapper';
 import {Colors} from '../../theme/Theme';
 import {FIRESTORE} from '../../constants';
 
-export default class ChatWindowScreen extends React.Component {
+class ChatWindowScreen extends React.Component {
   state = {
     messages: [],
   };
 
   constructor(props) {
     super(props);
-    console.log('TCL: ChatWindowScreen -> constructor -> props', props);
+    this.user = this.props.userContext.user;
   }
 
   componentDidMount() {
-    console.log(
-      'TCL: ChatWindowScreen -> componentDidMount -> this.props.navigation.state.params',
-      this.props.navigation.state.params,
-    );
     this.channelId = this.props.navigation.state.params.channelId;
+    this.channelRef = firestore()
+      .collection(FIRESTORE.COLLECTIONS.CHANNELS)
+      .doc(this.channelId);
     this.fetchMessages();
   }
 
   fetchMessages = async () => {
-    console.log(
-      'TCL: ChatWindowScreen -> fetchMessages -> this.channelId',
-      this.channelId,
-    );
-    const channelRef = firestore()
-      .collection(FIRESTORE.COLLECTIONS.CHANNELS)
-      .doc(this.channelId);
-    console.log(
-      'TCL: ChatWindowScreen -> fetchMessages -> channelRef',
-      channelRef,
-    );
     const messagesRef = firestore()
       .collection(FIRESTORE.COLLECTIONS.MESSAGES)
-      .where('channel', '==', channelRef);
+      .where('channel', '==', this.channelRef)
+      .orderBy('createdOn', 'desc');
     messagesRef.onSnapshot(snap => {
       const messages = [];
       snap.forEach(doc => {
+        const data = doc.data();
         const messageObj = {
           _id: doc.id,
-          ...doc.data(),
+          ...data,
           user: {
-            _id: 2,
+            _id: data.from ? data.from : 2,
             name: 'React Native',
             avatar: 'https://placeimg.com/140/140/any',
           },
+          system: !data.from,
         };
         messages.push(messageObj);
       });
-      console.log(
-        'TCL: ChatWindowScreen -> fetchMessages -> messages',
-        messages,
-      );
       this.setState({messages});
     });
   };
 
-  //   componentWillMount() {
-  //     this.setState({
-  //       messages: [
-  //         {
-  //           _id: 1,
-  //           text: 'Hello developer',
-  //           createdAt: new Date(),
-  //           user: {
-  //             _id: 2,
-  //             name: 'React Native',
-  //             avatar: 'https://placeimg.com/140/140/any',
-  //           },
-  //         },
-  //       ],
-  //     });
-  //   }
-
   onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
+    this.addMessage(messages[messages.length - 1]);
   }
+
+  addMessage = async message => {
+    console.log('TCL: ChatWindowScreen -> message', message);
+    const messageObj = {
+      channel: this.channelRef,
+      text: message.text,
+      type: 'TEXT',
+      createdOn: new Date(),
+      from: this.user._id,
+    };
+    console.log('TCL: ChatWindowScreen -> messageObj', messageObj);
+    const result = await firestore()
+      .collection(FIRESTORE.COLLECTIONS.MESSAGES)
+      .add(messageObj);
+    console.log('TCL: ChatWindowScreen -> result', result);
+  };
 
   renderBubble(props) {
     return (
@@ -111,9 +90,11 @@ export default class ChatWindowScreen extends React.Component {
         renderBubble={this.renderBubble}
         renderInputToolbar={this.renderInputToolbar}
         user={{
-          _id: 1,
+          _id: this.user._id,
         }}
       />
     );
   }
 }
+
+export default Wrapper(ChatWindowScreen);
