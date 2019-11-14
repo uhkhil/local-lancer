@@ -71,13 +71,15 @@ const postAuth = async (firebaseId, userContext) => {
   }
 };
 
-const checkNavigationFlow = async (userContext, navigation) => {
+const checkNavigationFlow = async (userContext, navigation, themeContext) => {
   const user = userContext.user;
   if (user.freelancerProfile) {
     userContext.setUserMode(AppRole.freelancer);
+    themeContext.setTheme(AppRole.freelancer);
     navigation.navigate('Home');
   } else if (user.recruiterProfile) {
     userContext.setUserMode(AppRole.recruiter);
+    themeContext.setTheme(AppRole.recruiter);
     navigation.navigate('Home');
   } else {
     console.log('profile setup page');

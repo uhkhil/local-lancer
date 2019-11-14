@@ -45,7 +45,11 @@ class SigninScreen extends React.Component {
       this.setState({loading: false});
       return;
     }
-    Auth.checkNavigationFlow(this.props.userContext, this.props.navigation);
+    Auth.checkNavigationFlow(
+      this.props.userContext,
+      this.props.navigation,
+      this.props.theme,
+    );
   };
 
   render() {

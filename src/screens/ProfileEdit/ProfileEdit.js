@@ -9,7 +9,7 @@ class ProfileEdit extends React.Component {
     this.state = {
       output: '',
     };
-    this.fetchUserProfile(props.context.user._id);
+    this.fetchUserProfile(props.userContext.user._id);
   }
 
   fetchUserProfile = userId => {
@@ -22,7 +22,7 @@ class ProfileEdit extends React.Component {
   render() {
     return (
       <Container>
-        <Text>Edit profile page</Text>
+        <Text>Edit profile page - pending...</Text>
         <Text>
           Response:
           {this.state.output}

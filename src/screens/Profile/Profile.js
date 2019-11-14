@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Alert} from 'react-native';
 import {Text, Thumbnail, H1, ListItem, List, Button} from 'native-base';
 import {Colors} from '../../theme/Theme';
 import {Wrapper} from '../../hocs/Wrapper';
@@ -12,14 +12,26 @@ class ProfileScreen extends React.Component {
   }
 
   signout = async () => {
-    await Auth.signOut(this.props.userContext);
-    this.props.navigation.navigate('Signin');
+    Alert.alert('Log out?', 'Are you sure you want to log out?', [
+      {
+        text: 'Yes',
+        onPress: async () => {
+          await Auth.signOut(this.props.userContext);
+          this.props.navigation.navigate('Auth');
+        },
+      },
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.mainSection}>
+        <View style={[styles.mainSection, this.props.theme.background]}>
           <Thumbnail
             style={styles.profileImage}
             source={{uri: 'https://lorempixel.com/400/400/people/1'}}
@@ -57,7 +69,13 @@ class ProfileScreen extends React.Component {
           </List>
         </View>
         <View style={styles.buttonContainer}>
-          <Button onPress={this.signout} block style={styles.logoutButton}>
+          <Button
+            onPress={this.signout}
+            block
+            style={[
+              styles.logoutButton,
+              {backgroundColor: this.props.theme.primary},
+            ]}>
             <Text style={styles.logoutButtonText}>Log out</Text>
           </Button>
         </View>

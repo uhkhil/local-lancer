@@ -184,7 +184,7 @@ class ProjectAdd extends React.Component {
 
   renderWelcome = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.bigTextContainer}>
           <Text style={styles.bigText}>Let's get you started.</Text>
         </View>
@@ -194,7 +194,7 @@ class ProjectAdd extends React.Component {
 
   renderName = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         {/* <KeyboardAvoidingView> */}
         <View style={styles.mainSection}>
           <Text style={styles.bigText}>Give your Project a title</Text>
@@ -213,7 +213,9 @@ class ProjectAdd extends React.Component {
             <Button
               style={styles.button}
               onPress={() => this.nextPage('title')}>
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={[styles.buttonText, this.props.theme.color]}>
+                Next
+              </Text>
             </Button>
           </View>
         </View>
@@ -223,7 +225,7 @@ class ProjectAdd extends React.Component {
 
   renderDescription = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         {/* <KeyboardAvoidingView> */}
         <View style={styles.mainSection}>
           <Text style={styles.bigText}>
@@ -244,7 +246,9 @@ class ProjectAdd extends React.Component {
             <Button
               style={styles.button}
               onPress={() => this.nextPage('description')}>
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={[styles.buttonText, this.props.theme.color]}>
+                Next
+              </Text>
             </Button>
           </View>
         </View>
@@ -254,7 +258,7 @@ class ProjectAdd extends React.Component {
 
   renderDomain = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.pickerSection}>
           <Item picker>
             <Picker
@@ -286,7 +290,9 @@ class ProjectAdd extends React.Component {
             <Button
               style={styles.button}
               onPress={() => this.nextPage('domain')}>
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={[styles.buttonText, this.props.theme.color]}>
+                Next
+              </Text>
             </Button>
           </View>
         </View>
@@ -296,7 +302,7 @@ class ProjectAdd extends React.Component {
 
   renderTimeline = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         {/* <KeyboardAvoidingView> */}
         <View style={styles.mainSection}>
           <Text style={styles.bigText}>Set a timeline for your project</Text>
@@ -316,7 +322,9 @@ class ProjectAdd extends React.Component {
             <Button
               style={styles.button}
               onPress={() => this.nextPage('timeline')}>
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={[styles.buttonText, this.props.theme.color]}>
+                Next
+              </Text>
             </Button>
           </View>
         </View>
@@ -383,7 +391,7 @@ class ProjectAdd extends React.Component {
         {this.renderTimeline()}
         {/* </KeyboardAvoidingView> */}
         {this.state.role === AppRole.freelancer ? (
-          <View style={styles.singlePage}>
+          <View style={[styles.singlePage, this.props.theme.background]}>
             <View style={styles.pickerSection}>
               <Item picker>
                 <Picker
@@ -415,13 +423,15 @@ class ProjectAdd extends React.Component {
                 <Button
                   style={styles.button}
                   onPress={() => this.nextPage('domain')}>
-                  <Text style={styles.buttonText}>Next</Text>
+                  <Text style={[styles.buttonText, this.props.theme.color]}>
+                    Next
+                  </Text>
                 </Button>
               </View>
             </View>
           </View>
         ) : null}
-        <View style={styles.singlePage}>
+        <View style={[styles.singlePage, this.props.theme.background]}>
           <View style={styles.bigTextContainer}>
             <Image
               style={{

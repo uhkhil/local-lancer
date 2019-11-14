@@ -19,6 +19,7 @@ class AuthLoadingScreen extends React.Component {
         await Auth.checkNavigationFlow(
           this.props.userContext,
           this.props.navigation,
+          this.props.theme,
         );
       }
     });

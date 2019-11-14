@@ -94,7 +94,8 @@ class ChatListScreen extends React.Component {
         <Body>
           <Text>{chat.name}</Text>
           <Text note numberOfLines={1}>
-            {chat.lastMessage}
+            {/* {chat.lastMessage} */}
+            Last message will come here...
           </Text>
         </Body>
         <Right>
@@ -115,7 +116,7 @@ class ChatListScreen extends React.Component {
   render() {
     return (
       <ScrollView>
-        <Text style={styles.header}>Messages</Text>
+        <Text style={[styles.header, this.props.theme.color]}>Messages</Text>
         {this.renderList(this.state.chats)}
       </ScrollView>
     );

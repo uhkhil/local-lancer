@@ -69,14 +69,14 @@ class ChatWindowScreen extends React.Component {
     console.log('TCL: ChatWindowScreen -> result', result);
   };
 
-  renderBubble(props) {
+  renderBubble = props => {
     return (
       <Bubble
         {...props}
-        wrapperStyle={{right: {backgroundColor: Colors.primaryColor}}}
+        wrapperStyle={{right: {backgroundColor: this.props.theme.primary}}}
       />
     );
-  }
+  };
 
   renderInputToolbar(props) {
     return <InputToolbar {...props} />;

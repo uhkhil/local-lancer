@@ -49,7 +49,7 @@ class ProjectList extends React.Component {
   render() {
     return (
       <Container>
-        <Text style={styles.header}>My Projects</Text>
+        <Text style={[styles.header, this.props.theme.color]}>My Projects</Text>
         <List>
           {this.state.projects.map(p => {
             return (
@@ -70,7 +70,7 @@ class ProjectList extends React.Component {
           })}
         </List>
         <ActionButton
-          buttonColor={Colors.primaryColor}
+          buttonColor={this.props.theme.primary}
           onPress={this.addProject}
         />
       </Container>

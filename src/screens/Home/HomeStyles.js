@@ -4,6 +4,7 @@ import {Colors, Fonts} from '../../theme/Theme';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.primary,
   },
   topPanel: {
     flexDirection: 'row',

@@ -1,15 +1,10 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../theme/Theme';
+import {StyleSheet} from 'react-native';
+import {Common} from '../../theme/Theme';
 
 export const styles = StyleSheet.create({
-    header: {
-        color: Colors.primaryColor,
-        fontSize: 20,
-        padding: 20,
-        fontWeight: 'bold',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center'
-    }
-})
+  ...Common,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+});

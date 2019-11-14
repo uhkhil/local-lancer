@@ -8,11 +8,11 @@ import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
 import {Api} from '../../services/Api';
 import {Wrapper} from '../../hocs/Wrapper';
 import {AppRole} from '../../enums/AppRole';
-import {Colors} from '../../theme/Theme';
 import {FreelancerCard} from '../../components/FreelancerCard/FreelancerCard';
 
 class HomeScreen extends React.Component {
   constructor(props) {
+    console.log('home init');
     super(props);
     this.state = {
       image: 'https://lorempixel.com/400/400/people/3',
@@ -114,15 +114,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View
-        style={[
-          styles.container,
-          {
-            backgroundColor:
-              this.props.userContext.userMode === AppRole.freelancer
-                ? Colors.freelancerPrimary
-                : Colors.recruiterPrimary,
-          },
-        ]}>
+        style={[styles.container, {backgroundColor: this.props.theme.primary}]}>
         <View style={styles.topPanel}>
           <Button
             rounded

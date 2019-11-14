@@ -74,28 +74,21 @@ class ProfileSetupScreen extends React.PureComponent {
     switch (role) {
       case AppRole.freelancer:
         this.setState({role});
-        this.props.userContext.setUserMode(0);
+        this.props.userContext.setUserMode(role);
+        this.props.theme.setTheme(role);
         this.next();
         break;
       case AppRole.recruiter:
         // TODO: Call API to store profile
         this.setState({role});
-        this.props.userContext.setUserMode(1);
+        this.props.userContext.setUserMode(role);
+        this.props.theme.setTheme(role);
         this.submitProfile(role);
         break;
       default:
         console.log('TCL: ProfileSetup -> selectRole -> role', role);
         console.log('Wrong role selected');
     }
-  };
-
-  selectedFreelancer = () => {
-    this.setState({role: AppRole.freelancer});
-  };
-
-  selectedRecruiter = () => {
-    // send to server
-    this.setState({role: AppRole.recruiter});
   };
 
   nextPage = pageName => {
@@ -177,7 +170,7 @@ class ProfileSetupScreen extends React.PureComponent {
 
   renderWelcome = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.bigTextContainer}>
           <Text style={styles.bigText}>Let's get you started.</Text>
         </View>
@@ -187,7 +180,7 @@ class ProfileSetupScreen extends React.PureComponent {
 
   renderName = () => {
     return (
-      <View style={styles.singlePage}>
+      <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.mainSection}>
           <Text style={styles.bigText}>Let's start with your name</Text>
           <View style={styles.nameContainer}>
@@ -210,7 +203,9 @@ class ProfileSetupScreen extends React.PureComponent {
         <View style={styles.buttonSection}>
           <View style={styles.buttonContainer}>
             <Button style={styles.button} onPress={() => this.nextPage('name')}>
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={[styles.buttonText, this.props.theme.color]}>
+                Next
+              </Text>
             </Button>
           </View>
         </View>
@@ -271,22 +266,26 @@ class ProfileSetupScreen extends React.PureComponent {
         {this.renderWelcome()}
         {this.renderName()}
         {/* </KeyboardAvoidingView> */}
-        <View style={styles.singlePage}>
+        <View style={[styles.singlePage, this.props.theme.background]}>
           <View style={styles.twoButtonContainer}>
             <Button
               style={styles.twoButton}
               onPress={() => this.selectRole(AppRole.freelancer)}>
-              <Text style={styles.twoButtonText}>I am a Freelancer</Text>
+              <Text style={[styles.twoButtonText, this.props.theme.color]}>
+                I am a Freelancer
+              </Text>
             </Button>
             <Button
               style={styles.twoButton}
               onPress={() => this.selectRole(AppRole.recruiter)}>
-              <Text style={styles.twoButtonText}>I am a Recruiter</Text>
+              <Text style={[styles.twoButtonText, this.props.theme.color]}>
+                I am a Recruiter
+              </Text>
             </Button>
           </View>
         </View>
         {this.state.role === AppRole.freelancer ? (
-          <View style={styles.singlePage}>
+          <View style={[styles.singlePage, this.props.theme.background]}>
             <View style={styles.pickerSection}>
               <Item picker>
                 <Picker
@@ -318,13 +317,15 @@ class ProfileSetupScreen extends React.PureComponent {
                 <Button
                   style={styles.button}
                   onPress={() => this.nextPage('domain')}>
-                  <Text style={styles.buttonText}>Next</Text>
+                  <Text style={[styles.buttonText, this.props.theme.color]}>
+                    Next
+                  </Text>
                 </Button>
               </View>
             </View>
           </View>
         ) : null}
-        <View style={styles.singlePage}>
+        <View style={[styles.singlePage, this.props.theme.background]}>
           <View style={styles.bigTextContainer}>
             <Image
               style={{
