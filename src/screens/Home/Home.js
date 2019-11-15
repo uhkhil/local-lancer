@@ -134,9 +134,9 @@ class HomeScreen extends React.Component {
               name="mail"
               onPress={this.viewDMs}
             />
-            <Badge primary style={styles.dmBadge}>
+            {/* <Badge primary style={styles.dmBadge}>
               <Text>2</Text>
-            </Badge>
+            </Badge> */}
           </Button>
         </View>
 

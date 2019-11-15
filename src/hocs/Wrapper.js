@@ -7,6 +7,8 @@ const ThemeContext = createContext({
   primary: 'lightpink',
 });
 
+const greenish = '#44d0af';
+
 export const AppWrapper = App => {
   class WrapperClass extends Component {
     constructor() {
@@ -20,9 +22,12 @@ export const AppWrapper = App => {
           setUserMode: this.setUserMode,
         },
         themeContext: {
-          primary: 'lightpink',
+          primary: greenish,
           background: {
-            backgroundColor: 'lightpink',
+            backgroundColor: greenish,
+          },
+          color: {
+            color: greenish,
           },
           setTheme: this.setTheme,
         },

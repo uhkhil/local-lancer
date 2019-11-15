@@ -11,11 +11,25 @@ import {
   Badge,
 } from 'native-base';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
 
 import {Wrapper} from '../../hocs/Wrapper';
 import styles from './ChatListStyles';
 import {FIRESTORE} from '../../constants';
 import {AppRole} from '../../enums/AppRole';
+
+// TODO Remove moment
+const convertTime = time =>
+  moment
+    .utc(new firestore.Timestamp(time.seconds, time.nanoseconds).toDate())
+    .local()
+    .calendar(null, {
+      lastDay: '[Yesterday]',
+      sameDay: 'LT',
+      nextDay: '[Tomorrow at] LT',
+      lastWeek: 'DD MMM YYYY',
+      sameElse: 'DD MMM YYYY',
+    });
 
 class ChatListScreen extends React.Component {
   state = {
@@ -27,6 +41,16 @@ class ChatListScreen extends React.Component {
     this.fetchChats();
   }
 
+  getChannelName = (projectName, person) => {
+    const userMode = this.props.userContext.userMode;
+    switch (userMode) {
+      case AppRole.recruiter:
+        return `${projectName} : ${person.firstName} ${person.lastName}`;
+      case AppRole.freelancer:
+        return `${person.firstName} ${person.lastName}`;
+    }
+  };
+
   fetchChats = () => {
     const user = this.props.userContext.user;
     const userMode = this.props.userContext.userMode;
@@ -36,12 +60,14 @@ class ChatListScreen extends React.Component {
       case AppRole.freelancer:
         channelsRef = firestore()
           .collection(FIRESTORE.COLLECTIONS.CHANNELS)
-          .where('freelancerId', '==', user._id);
+          .where('freelancerId', '==', user._id)
+          .orderBy('lastMessageOn', 'desc');
         break;
       case AppRole.recruiter:
         channelsRef = firestore()
           .collection(FIRESTORE.COLLECTIONS.CHANNELS)
-          .where('recruiterId', '==', user._id);
+          .where('recruiterId', '==', user._id)
+          .orderBy('lastMessageOn', 'desc');
         break;
     }
 
@@ -57,9 +83,8 @@ class ChatListScreen extends React.Component {
           const channelObj = {
             channelId: doc.id,
             ...data,
-            name: `${data.projectName} : ${otherGuy.firstName} ${
-              otherGuy.lastName
-            }`,
+            lastMessageOn: convertTime(data.lastMessageOn),
+            name: this.getChannelName(data.projectName, otherGuy),
             profilePic: 'https://lorempixel.com/400/400/people/1',
           };
           chats.push(channelObj);
@@ -94,14 +119,12 @@ class ChatListScreen extends React.Component {
         <Body>
           <Text>{chat.name}</Text>
           <Text note numberOfLines={1}>
-            {/* {chat.lastMessage} */}
-            Last message will come here...
+            {chat.lastMessage}
           </Text>
         </Body>
         <Right>
           <Text style={styles.time} note>
-            8:10 pm
-            {/* {chat.lastMessageOn} */}
+            {chat.lastMessageOn}
           </Text>
           {chat.unreadCount ? (
             <Badge style={styles.badge} success>
