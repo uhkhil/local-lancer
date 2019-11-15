@@ -18,7 +18,7 @@ import styles from './ChatListStyles';
 import {FIRESTORE} from '../../constants';
 import {AppRole} from '../../enums/AppRole';
 
-// TODO Remove moment
+// TODO: Remove moment
 const convertTime = time =>
   moment
     .utc(new firestore.Timestamp(time.seconds, time.nanoseconds).toDate())
@@ -80,12 +80,14 @@ class ChatListScreen extends React.Component {
           const otherGuy = data.users.find(u => {
             return u._id !== user._id;
           });
+          const self = data.users.find(u => u._id === user._id);
           const channelObj = {
             channelId: doc.id,
             ...data,
             lastMessageOn: convertTime(data.lastMessageOn),
             name: this.getChannelName(data.projectName, otherGuy),
             profilePic: 'https://lorempixel.com/400/400/people/1',
+            unreadCount: self.unreadCount,
           };
           chats.push(channelObj);
         });
@@ -127,7 +129,7 @@ class ChatListScreen extends React.Component {
             {chat.lastMessageOn}
           </Text>
           {chat.unreadCount ? (
-            <Badge style={styles.badge} success>
+            <Badge style={[styles.badge, this.props.theme.background]} success>
               <Text style={styles.badgeText}>{chat.unreadCount}</Text>
             </Badge>
           ) : null}

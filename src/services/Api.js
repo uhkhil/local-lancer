@@ -43,6 +43,10 @@ const swipeFreelancer = (userId, projectId, freelancerId, response) => {
     },
   });
 };
+const onMessageAdd = (channelId, messageObj) =>
+  Axios.post(`${baseUrl}/onMessageAdd`, {channelId, messageObj});
+const onEnterChat = (channelId, userId) =>
+  Axios.get(`${baseUrl}/onEnterChat`, {params: {channelId, userId}});
 
 export const Api = {
   signedUp,
@@ -56,4 +60,6 @@ export const Api = {
   swipeProject,
   exploreFreelancers,
   swipeFreelancer,
+  onMessageAdd,
+  onEnterChat,
 };

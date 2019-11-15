@@ -3,8 +3,8 @@ import {GiftedChat, Bubble, InputToolbar} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 
 import {Wrapper} from '../../hocs/Wrapper';
-import {Colors} from '../../theme/Theme';
 import {FIRESTORE} from '../../constants';
+import {Api} from '../../services/Api';
 
 class ChatWindowScreen extends React.Component {
   state = {
@@ -16,11 +16,16 @@ class ChatWindowScreen extends React.Component {
     this.user = this.props.userContext.user;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.channelId = this.props.navigation.state.params.channelId;
     this.channelRef = firestore()
       .collection(FIRESTORE.COLLECTIONS.CHANNELS)
       .doc(this.channelId);
+    const response = await Api.onEnterChat(this.channelId, this.user._id);
+    console.log(
+      'TCL: ChatWindowScreen -> componentDidMount -> response',
+      response.data,
+    );
     this.fetchMessages();
   }
 
@@ -49,12 +54,12 @@ class ChatWindowScreen extends React.Component {
     });
   };
 
-  onSend(messages = []) {
-    this.addMessage(messages[messages.length - 1]);
+  async onSend(messages = []) {
+    const message = messages[messages.length - 1];
+    this.addMessage(message);
   }
 
   addMessage = async message => {
-    console.log('TCL: ChatWindowScreen -> message', message);
     const messageObj = {
       channel: this.channelRef,
       text: message.text,
@@ -62,11 +67,11 @@ class ChatWindowScreen extends React.Component {
       createdOn: new Date(),
       from: this.user._id,
     };
-    console.log('TCL: ChatWindowScreen -> messageObj', messageObj);
     const result = await firestore()
       .collection(FIRESTORE.COLLECTIONS.MESSAGES)
       .add(messageObj);
-    console.log('TCL: ChatWindowScreen -> result', result);
+    delete messageObj.channel;
+    const countResult = await Api.onMessageAdd(this.channelId, messageObj);
   };
 
   renderBubble = props => {

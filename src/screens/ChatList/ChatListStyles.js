@@ -11,13 +11,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   badge: {
-    height: 23,
-    width: 23,
     padding: 0,
     marginTop: 7,
+    justifyContent: 'center',
   },
   badgeText: {
     fontSize: 12,
+    alignSelf: 'center',
   },
 });
 
