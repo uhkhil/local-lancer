@@ -2,6 +2,7 @@ import React from 'react';
 import {View, ToastAndroid, TouchableOpacity} from 'react-native';
 import {Text, Button, DeckSwiper, Icon, Thumbnail, Badge} from 'native-base';
 import {Pulse} from 'react-native-loader';
+import firestore from '@react-native-firebase/firestore';
 
 import styles from './HomeStyles';
 import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
@@ -9,6 +10,7 @@ import {Api} from '../../services/Api';
 import {Wrapper} from '../../hocs/Wrapper';
 import {AppRole} from '../../enums/AppRole';
 import {FreelancerCard} from '../../components/FreelancerCard/FreelancerCard';
+import {FIRESTORE} from '../../constants';
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -19,8 +21,28 @@ class HomeScreen extends React.Component {
       projects: [],
       freelancers: [],
       loading: false,
+      unreadCount: 0,
     };
+    this.fetchUnreadCount();
   }
+
+  fetchUnreadCount = async () => {
+    const userId = this.props.userContext.user._id;
+    const userRef = await firestore()
+      .collection(FIRESTORE.COLLECTIONS.USERS)
+      .doc(userId);
+    this.unsubscribe = userRef.onSnapshot(snap => {
+      if (!snap.exists) {
+        return;
+      }
+      const data = snap.data();
+      if (data.unreadCount) {
+        this.setState({unreadCount: data.unreadCount});
+      } else {
+        this.setState({unreadCount: 0});
+      }
+    });
+  };
 
   viewProfile = () => {
     this.props.navigation.navigate('MyProfile');
@@ -134,9 +156,11 @@ class HomeScreen extends React.Component {
               name="mail"
               onPress={this.viewDMs}
             />
-            {/* <Badge primary style={styles.dmBadge}>
-              <Text>2</Text>
-            </Badge> */}
+            {this.state.unreadCount ? (
+              <Badge primary style={styles.dmBadge}>
+                <Text>{this.state.unreadCount}</Text>
+              </Badge>
+            ) : null}
           </Button>
         </View>
 
