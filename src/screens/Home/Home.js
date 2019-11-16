@@ -28,6 +28,7 @@ class HomeScreen extends React.Component {
 
   fetchUnreadCount = async () => {
     const userId = this.props.userContext.user._id;
+    const mode = this.props.userContext.userMode;
     const userRef = await firestore()
       .collection(FIRESTORE.COLLECTIONS.USERS)
       .doc(userId);
@@ -36,10 +37,21 @@ class HomeScreen extends React.Component {
         return;
       }
       const data = snap.data();
-      if (data.unreadCount) {
-        this.setState({unreadCount: data.unreadCount});
-      } else {
-        this.setState({unreadCount: 0});
+      switch (mode) {
+        case AppRole.freelancer:
+          if (data.unreadCountFreelancer) {
+            this.setState({unreadCount: data.unreadCountFreelancer});
+          } else {
+            this.setState({unreadCount: 0});
+          }
+          break;
+        case AppRole.recruiter:
+          if (data.unreadCountRecruiter) {
+            this.setState({unreadCount: data.unreadCountRecruiter});
+          } else {
+            this.setState({unreadCount: 0});
+          }
+          break;
       }
     });
   };
