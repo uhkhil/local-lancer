@@ -21,6 +21,7 @@ const bluish = '#24d7fa';
 
 export const FreelancerTheme = {
   primary: greenish,
+  otherPrimary: bluish,
   background: {
     backgroundColor: greenish,
   },
@@ -31,6 +32,7 @@ export const FreelancerTheme = {
 
 export const RecruiterTheme = {
   primary: bluish,
+  otherPrimary: greenish,
   background: {
     backgroundColor: bluish,
   },

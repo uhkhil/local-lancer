@@ -1,10 +1,21 @@
 import React from 'react';
-import {GiftedChat, Bubble, InputToolbar} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, Time} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 
 import {Wrapper} from '../../hocs/Wrapper';
 import {FIRESTORE} from '../../constants';
 import {Api} from '../../services/Api';
+import {
+  Button,
+  Text,
+  View,
+  Header,
+  Left,
+  Right,
+  Body,
+  Icon,
+  Title,
+} from 'native-base';
 
 class ChatWindowScreen extends React.Component {
   state = {
@@ -22,10 +33,6 @@ class ChatWindowScreen extends React.Component {
       .collection(FIRESTORE.COLLECTIONS.CHANNELS)
       .doc(this.channelId);
     const response = await Api.onEnterChat(this.channelId, this.user._id);
-    console.log(
-      'TCL: ChatWindowScreen -> componentDidMount -> response',
-      response.data,
-    );
     this.fetchMessages();
   }
 
@@ -41,6 +48,7 @@ class ChatWindowScreen extends React.Component {
         const messageObj = {
           _id: doc.id,
           ...data,
+          createdAt: data.createdOn.toDate(),
           user: {
             _id: data.from ? data.from : 2,
             name: 'React Native',
@@ -78,26 +86,54 @@ class ChatWindowScreen extends React.Component {
     return (
       <Bubble
         {...props}
-        wrapperStyle={{right: {backgroundColor: this.props.theme.primary}}}
+        wrapperStyle={{
+          right: {backgroundColor: this.props.theme.primary},
+          left: {
+            backgroundColor: this.props.theme.otherPrimary,
+          },
+        }}
+        textStyle={{left: {color: 'white'}}}
       />
     );
   };
 
-  renderInputToolbar(props) {
-    return <InputToolbar {...props} />;
+  renderSend = () => (
+    <Button>
+      <Text>Send</Text>
+    </Button>
+  );
+
+  renderTime(props) {
+    return <Time {...props} timeTextStyle={{left: {color: 'white'}}} />;
   }
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={messages => this.onSend(messages)}
-        renderBubble={this.renderBubble}
-        renderInputToolbar={this.renderInputToolbar}
-        user={{
-          _id: this.user._id,
-        }}
-      />
+      <View style={{flex: 1}}>
+        <Header style={{backgroundColor: 'white'}}>
+          <Left>
+            <Button transparent>
+              <Icon name="arrow-back" style={this.props.theme.color} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={[this.props.theme.color]}>
+              {this.props.navigation.state.params.name}
+            </Title>
+          </Body>
+          <Right />
+        </Header>
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={messages => this.onSend(messages)}
+          renderBubble={this.renderBubble}
+          renderInputToolbar={this.renderInputToolbar}
+          renderTime={this.renderTime}
+          user={{
+            _id: this.user._id,
+          }}
+        />
+      </View>
     );
   }
 }

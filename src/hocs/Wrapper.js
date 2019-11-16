@@ -23,6 +23,7 @@ export const AppWrapper = App => {
         },
         themeContext: {
           primary: greenish,
+          otherPrimary: greenish,
           background: {
             backgroundColor: greenish,
           },
