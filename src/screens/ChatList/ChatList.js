@@ -54,7 +54,6 @@ class ChatListScreen extends React.Component {
   fetchChats = () => {
     const user = this.props.userContext.user;
     const userMode = this.props.userContext.userMode;
-    console.log('TCL: ChatListScreen -> fetchChats -> userMode', userMode);
     let channelsRef;
     switch (userMode) {
       case AppRole.freelancer:
@@ -86,12 +85,11 @@ class ChatListScreen extends React.Component {
             ...data,
             lastMessageOn: convertTime(data.lastMessageOn),
             name: this.getChannelName(data.projectName, otherGuy),
-            profilePic: 'https://lorempixel.com/400/400/people/1',
+            image: otherGuy.image,
             unreadCount: self.unreadCount,
           };
           chats.push(channelObj);
         });
-        console.log('TCL: ChatListScreen -> fetchChats -> chats', chats);
         this.setState({
           chats,
         });
@@ -116,7 +114,7 @@ class ChatListScreen extends React.Component {
     return (
       <ListItem onPress={() => this.openChatWindow(chat)} thumbnail>
         <Left>
-          <Thumbnail source={{uri: chat.profilePic}} />
+          <Thumbnail source={{uri: chat.image}} />
         </Left>
         <Body>
           <Text>{chat.name}</Text>

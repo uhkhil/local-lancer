@@ -146,6 +146,7 @@ class HomeScreen extends React.Component {
   };
 
   render() {
+    const {image} = this.props.userContext.user;
     return (
       <View
         style={[styles.container, {backgroundColor: this.props.theme.primary}]}>
@@ -155,7 +156,7 @@ class HomeScreen extends React.Component {
             transparent
             style={styles.profileBtn}
             onPress={this.viewProfile}>
-            <Thumbnail source={{uri: this.state.image}} />
+            <Thumbnail source={{uri: image}} />
           </Button>
           <Button
             rounded

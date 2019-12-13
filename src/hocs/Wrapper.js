@@ -47,12 +47,16 @@ export const AppWrapper = App => {
     };
 
     setUserFields = fields => {
-      this.setState({
-        userContext: {
-          ...this.state.userContext,
-          user: {...this.state.userContext.user, ...fields},
+      console.log('TCL: WrapperClass -> fields', fields);
+      this.setState(
+        {
+          userContext: {
+            ...this.state.userContext,
+            user: {...this.state.userContext.user, ...fields},
+          },
         },
-      });
+        () => console.log(this.state),
+      );
     };
 
     clearUserFields = () => {

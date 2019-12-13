@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,36 +39,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 50,
   },
-  buttonSignUp: {
-    width: 150,
-    justifyContent: 'center',
-    backgroundColor: '#44d0af',
-  },
   buttonSignin: {
     width: 150,
     justifyContent: 'center',
+    backgroundColor: '#44d0af',
   },
   buttonSigninText: {
-    color: 'black',
+    color: 'white',
     borderColor: '#44d0af',
-  },
-  buttonGoogle: {
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    backgroundColor: '#44d0af',
-  },
-  buttonFacebook: {
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    backgroundColor: '#44d0af',
-  },
-  others: {
-    flexDirection: 'row',
-    width: 125,
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
   },
 });
 

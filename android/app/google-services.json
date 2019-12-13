@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "729838792209-frugu250han7h7havv6kvnlpgf13qvhv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.locallancer",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "729838792209-6k2e388rotksklotl4ghe2qcde1b9sl2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

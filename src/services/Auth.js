@@ -1,40 +1,32 @@
 import {Api} from './Api';
 import auth from '@react-native-firebase/auth';
 import {AppRole} from '../enums/AppRole';
+import {GoogleSignin} from '@react-native-community/google-signin';
+import {firebase} from '@react-native-firebase/auth';
 
-const signUp = async data => {
-  const {email, password} = data;
-  let credential;
-  try {
-    credential = await auth().createUserWithEmailAndPassword(email, password);
-  } catch (error) {
-    console.warn(error);
-    return {
-      status: false,
-      message: error.toString(),
-    };
-  }
-  const result = await Api.signedUp({email});
-  return {
-    status: true,
-  };
+const initSocialAuth = () => {
+  GoogleSignin.configure({
+    webClientId:
+      '729838792209-luvcaphtdoh165u21u14ucibl11peh3m.apps.googleusercontent.com',
+  });
 };
 
-const signIn = async (data, userContext) => {
+const signIn = async userContext => {
   try {
-    const {type} = data;
-    let firebaseId;
-    switch (type) {
-      case 'email':
-        const {email, password} = data;
-        const result = await auth().signInWithEmailAndPassword(email, password);
-        firebaseId = result.user.uid;
-        // TODO: Use the token
-        const token = await result.user.getIdToken();
+    await GoogleSignin.hasPlayServices();
+    await GoogleSignin.signIn();
+    const {accessToken, idToken} = await GoogleSignin.signIn();
+    const credential = firebase.auth.GoogleAuthProvider.credential(
+      idToken,
+      accessToken,
+    );
+    const result = await firebase.auth().signInWithCredential(credential);
+    if (result.additionalUserInfo.isNewUser) {
+      await Api.signedUp(result.additionalUserInfo.profile);
     }
-    await postAuth(firebaseId, userContext);
+    await postAuth(result.user.uid, userContext);
     return true;
-  } catch (err) {
+  } catch (error) {
     return false;
   }
 };
@@ -43,6 +35,7 @@ const signOut = async userContext => {
   try {
     userContext.clearUserFields();
     await auth().signOut();
+    await GoogleSignin.signOut();
     return true;
   } catch (error) {
     console.warn(error);
@@ -57,13 +50,13 @@ const storeUserInfo = (userContext, data) => {
 /**
  * Fetches user information from the database and stores it in the userContext.
  *
- * @param {string} firebaseId - The firebase uid for the user
+ * @param {string} uid - The firebase uid for the user
  * @param {object} userContext - The user userContext which will be used to store the user's information
  * @return {void} Returns promise of nothing
  */
-const postAuth = async (firebaseId, userContext) => {
+const postAuth = async (uid, userContext) => {
   try {
-    const res = await Api.getUserInfo(firebaseId);
+    const res = await Api.getUserInfo(uid);
     const userInfo = res.data.data[0];
     storeUserInfo(userContext, userInfo);
   } catch (err) {
@@ -88,7 +81,8 @@ const checkNavigationFlow = async (userContext, navigation, themeContext) => {
 };
 
 export const Auth = {
-  signUp,
+  initSocialAuth,
+  // signUp,
   signIn,
   signOut,
   postAuth,

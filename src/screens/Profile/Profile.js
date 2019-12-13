@@ -34,7 +34,7 @@ class ProfileScreen extends React.Component {
         <View style={[styles.mainSection, this.props.theme.background]}>
           <Thumbnail
             style={styles.profileImage}
-            source={{uri: 'https://lorempixel.com/400/400/people/1'}}
+            source={{uri: this.user.image}}
           />
           <H1 style={styles.name}>
             {this.user.firstName} {this.user.lastName}

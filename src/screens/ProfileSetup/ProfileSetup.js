@@ -45,9 +45,11 @@ const allDomains = [
 class ProfileSetupScreen extends React.PureComponent {
   constructor(props) {
     super(props);
+    const user = props.userContext.user;
     this.state = {
-      firstName: '',
-      lastName: '',
+      firstName: user.firstName,
+      lastName: user.lastName,
+      image: user.image,
       role: null,
       pageIndex: 0,
       selectedDomain: undefined,
@@ -179,6 +181,7 @@ class ProfileSetupScreen extends React.PureComponent {
   };
 
   renderName = () => {
+    const {firstName, lastName} = this.state;
     return (
       <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.mainSection}>
@@ -189,6 +192,7 @@ class ProfileSetupScreen extends React.PureComponent {
               placeholder="First"
               autoCapitalize="none"
               placeholderTextColor="gray"
+              value={firstName}
               onChangeText={val => this.setState({firstName: val})}
             />
             <TextInput
@@ -196,6 +200,7 @@ class ProfileSetupScreen extends React.PureComponent {
               placeholder="Last"
               autoCapitalize="none"
               placeholderTextColor="gray"
+              value={lastName}
               onChangeText={val => this.setState({lastName: val})}
             />
           </View>

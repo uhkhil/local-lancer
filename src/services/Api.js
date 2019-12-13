@@ -1,6 +1,7 @@
 import Axios from 'axios';
 
 const baseUrl = 'https://local-lancer.herokuapp.com/api';
+// const baseUrl = 'http://192.168.1.126:8080/api';
 
 const signedUp = data => Axios.post(`${baseUrl}/signedUp`, data);
 const getUserInfo = userId =>

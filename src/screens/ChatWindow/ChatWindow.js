@@ -1,13 +1,8 @@
 import React from 'react';
 import {GiftedChat, Bubble, Time} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-
-import {Wrapper} from '../../hocs/Wrapper';
-import {FIRESTORE} from '../../constants';
-import {Api} from '../../services/Api';
 import {
   Button,
-  Text,
   View,
   Header,
   Left,
@@ -16,6 +11,10 @@ import {
   Icon,
   Title,
 } from 'native-base';
+
+import {Wrapper} from '../../hocs/Wrapper';
+import {FIRESTORE} from '../../constants';
+import {Api} from '../../services/Api';
 
 class ChatWindowScreen extends React.Component {
   state = {
@@ -28,12 +27,12 @@ class ChatWindowScreen extends React.Component {
   }
 
   async componentDidMount() {
-    this.channelId = this.props.navigation.state.params.channelId;
+    this.chat = this.props.navigation.state.params;
     this.channelRef = firestore()
       .collection(FIRESTORE.COLLECTIONS.CHANNELS)
-      .doc(this.channelId);
-    const response = await Api.onEnterChat(this.channelId, this.user._id);
+      .doc(this.chat.channelId);
     this.fetchMessages();
+    Api.onEnterChat(this.chat.channelId, this.user._id);
   }
 
   fetchMessages = async () => {
@@ -51,8 +50,8 @@ class ChatWindowScreen extends React.Component {
           createdAt: data.createdOn.toDate(),
           user: {
             _id: data.from ? data.from : 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
+            name: this.chat.name,
+            avatar: this.chat.image,
           },
           system: !data.from,
         };
@@ -75,11 +74,11 @@ class ChatWindowScreen extends React.Component {
       createdOn: new Date(),
       from: this.user._id,
     };
-    const result = await firestore()
+    await firestore()
       .collection(FIRESTORE.COLLECTIONS.MESSAGES)
       .add(messageObj);
     delete messageObj.channel;
-    const countResult = await Api.onMessageAdd(this.channelId, messageObj);
+    await Api.onMessageAdd(this.chat.channelId, messageObj);
   };
 
   renderBubble = props => {
@@ -96,12 +95,6 @@ class ChatWindowScreen extends React.Component {
       />
     );
   };
-
-  renderSend = () => (
-    <Button>
-      <Text>Send</Text>
-    </Button>
-  );
 
   renderTime(props) {
     return <Time {...props} timeTextStyle={{left: {color: 'white'}}} />;

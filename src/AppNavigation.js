@@ -16,6 +16,9 @@ import {ProfileEditScreen} from './screens/ProfileEdit/ProfileEdit';
 import {ProjectListScreen} from './screens/ProjectList/ProjectList';
 import {AppWrapper} from './hocs/Wrapper';
 import HomeScreen from './screens/Home/Home';
+import {Auth} from './services/Auth';
+
+Auth.initSocialAuth();
 
 const AppStack = createStackNavigator(
   {

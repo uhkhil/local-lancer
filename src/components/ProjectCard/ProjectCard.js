@@ -81,7 +81,7 @@ class ProjectCardComponent extends React.Component {
           </CardItem>
           <CardItem style={styles.cardItemBottom}>
             <Left>
-              <Thumbnail source={{uri: this.state.image}} />
+              <Thumbnail source={{uri: this.props.data.owner.image}} />
               <Body>
                 <Text>{name(this.props.data.owner)}</Text>
                 <Text note>{this.props.data.owner.proximity}</Text>
