@@ -22,11 +22,12 @@ class ProjectCardComponent extends React.Component {
     if (domains.length - 2 > 0) {
       extra = domains.length - 2;
     }
+    const {theme} = this.props;
     return (
       <CardItem style={styles.domainContainer}>
         {domains.slice(0, 2).map(domain => (
-          <Button rounded info small style={styles.domain}>
-            <Text>{domain.name}</Text>
+          <Button rounded info small style={[styles.domain, theme.background]}>
+            <Text style={styles.domainText}>{domain.name}</Text>
           </Button>
         ))}
         {extra ? (
@@ -38,15 +39,20 @@ class ProjectCardComponent extends React.Component {
     );
   };
 
+  tapped = () => {
+    console.log('tapped');
+  };
+
   render() {
+    const {theme} = this.props;
     return (
-      <View style={styles.cardContainer}>
+      <View style={styles.cardContainer} onPress={this.tapped}>
         <Card style={styles.card}>
           <CardItem style={styles.cardItemTop} header>
             <H1
               numberOfLines={2}
               onPress={this.toggleExpansion}
-              style={styles.title}>
+              style={[styles.title, theme.color]}>
               {this.props.data.title}
             </H1>
           </CardItem>
@@ -61,7 +67,9 @@ class ProjectCardComponent extends React.Component {
             </Left>
           </CardItem>
           <CardItem style={styles.cardItemBottom}>
-            <Text numberOfLines={3}>{this.props.data.description}</Text>
+            <Text style={styles.description} numberOfLines={3}>
+              {this.props.data.description}
+            </Text>
           </CardItem>
         </Card>
       </View>

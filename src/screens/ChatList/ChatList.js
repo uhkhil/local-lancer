@@ -9,6 +9,8 @@ import {
   Body,
   Right,
   Badge,
+  View,
+  Container,
 } from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
@@ -17,6 +19,7 @@ import {Wrapper} from '../../hocs/Wrapper';
 import styles from './ChatListStyles';
 import {FIRESTORE} from '../../constants';
 import {AppRole} from '../../enums/AppRole';
+import {NoData} from '../../components/NoData/NoData';
 
 // TODO: Remove moment
 const convertTime = time =>
@@ -105,8 +108,11 @@ class ChatListScreen extends React.Component {
   };
 
   renderList = () => {
-    return (
+    const {chats} = this.state;
+    return chats.length ? (
       <List>{this.state.chats.map(chat => this.renderListItem(chat))}</List>
+    ) : (
+      <NoData style={styles.noData} icon="" text="No messages yet  :(" />
     );
   };
 
@@ -138,10 +144,10 @@ class ChatListScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView>
+      <Container>
         <Text style={[styles.header, this.props.theme.color]}>Messages</Text>
         {this.renderList(this.state.chats)}
-      </ScrollView>
+      </Container>
     );
   }
 

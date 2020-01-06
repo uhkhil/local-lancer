@@ -4,6 +4,7 @@ import {Text, Thumbnail, H1, ListItem, List, Button} from 'native-base';
 import {Colors} from '../../theme/Theme';
 import {Wrapper} from '../../hocs/Wrapper';
 import {Auth} from '../../services/Auth';
+import {AppRole} from '../../enums/AppRole';
 
 class ProfileScreen extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class ProfileScreen extends React.Component {
   };
 
   render() {
+    const {userMode} = this.props.userContext;
     return (
       <View style={styles.container}>
         <View style={[styles.mainSection, this.props.theme.background]}>
@@ -47,19 +49,21 @@ class ProfileScreen extends React.Component {
           </Button>
         </View>
         <View>
-          <List>
+          <List style={styles.list}>
             <ListItem
               noBorder
               style={styles.item}
               onPress={() => this.props.navigation.navigate('MyPortfolio')}>
-              <Text style={styles.itemText}>My Portfolio</Text>
+              <Text style={styles.itemText}>My Card</Text>
             </ListItem>
-            <ListItem
-              noBorder
-              style={styles.item}
-              onPress={() => this.props.navigation.navigate('ProjectList')}>
-              <Text style={styles.itemText}>My Projects</Text>
-            </ListItem>
+            {userMode === AppRole.recruiter ? (
+              <ListItem
+                noBorder
+                style={styles.item}
+                onPress={() => this.props.navigation.navigate('ProjectList')}>
+                <Text style={styles.itemText}>My Projects</Text>
+              </ListItem>
+            ) : null}
             <ListItem
               noBorder
               style={styles.item}
@@ -115,15 +119,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     padding: 5,
   },
+  list: {
+    margin: 15,
+  },
   item: {
-    // borderLeftWidth: 5,
-    // borderLeftColor: Colors.primaryColor,
+    marginLeft: 5,
   },
   itemText: {
     color: Colors.dark,
   },
   logoutButton: {
-    backgroundColor: Colors.primaryColor,
+    margin: 10,
   },
   logoutButtonText: {
     color: Colors.white,

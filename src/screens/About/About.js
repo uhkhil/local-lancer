@@ -8,7 +8,7 @@ class AboutScreen extends React.Component {
   render() {
     return (
       <View style={[styles.container, this.props.theme.background]}>
-        <Text style={styles.aboutText}>mAde wiTh LoVe FroM pUnE</Text>
+        <Text style={styles.aboutText}>Made with ❤️ from Pune</Text>
       </View>
     );
   }
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   aboutText: {
     textAlign: 'center',
     color: Colors.white,
+    fontSize: 20,
   },
 });
 
