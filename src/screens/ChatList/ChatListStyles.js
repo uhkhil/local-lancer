@@ -19,6 +19,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     alignSelf: 'center',
   },
+  noData: {
+    paddingTop: 100,
+  },
 });
 
 export default styles;

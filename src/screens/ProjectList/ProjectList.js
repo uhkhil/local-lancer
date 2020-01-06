@@ -13,10 +13,9 @@ import {
 } from 'native-base';
 import ActionButton from 'react-native-action-button';
 import {styles} from './ProjectListStyles';
-import {Colors} from '../../theme/Theme';
-import {AsyncStorage} from 'react-native';
 import {Api} from '../../services/Api';
 import {Wrapper} from '../../hocs/Wrapper';
+import {NoData} from '../../components/NoData/NoData';
 
 class ProjectList extends React.Component {
   constructor(props) {
@@ -46,29 +45,36 @@ class ProjectList extends React.Component {
     });
   };
 
+  renderItem = () => {};
+
   render() {
+    const {projects} = this.state;
     return (
       <Container>
         <Text style={[styles.header, this.props.theme.color]}>My Projects</Text>
-        <List>
-          {this.state.projects.map(p => {
-            return (
-              <ListItem key={p._id} noBorder style={styles.item}>
-                <Body>
-                  <Text>{p.title}</Text>
-                  <Text note numberOfLines={1}>
-                    {p.description}
-                  </Text>
-                </Body>
-                <Right>
-                  {/* <Button transparent> */}
-                  <Text>{p.isActive ? 'Active' : 'Inactive'}</Text>
-                  {/* </Button> */}
-                </Right>
-              </ListItem>
-            );
-          })}
-        </List>
+        {projects.length ? (
+          <List>
+            {projects.map(p => {
+              return (
+                <ListItem key={p._id} noBorder style={styles.item}>
+                  <Body>
+                    <Text>{p.title}</Text>
+                    <Text note numberOfLines={1}>
+                      {p.description}
+                    </Text>
+                  </Body>
+                  <Right>
+                    {/* <Button transparent> */}
+                    <Text>{p.isActive ? 'Active' : 'Inactive'}</Text>
+                    {/* </Button> */}
+                  </Right>
+                </ListItem>
+              );
+            })}
+          </List>
+        ) : (
+          <NoData text="No projects as of yet" />
+        )}
         <ActionButton
           buttonColor={this.props.theme.primary}
           onPress={this.addProject}
