@@ -42,12 +42,10 @@ export const AppWrapper = App => {
      * @return {void} Return nothing
      */
     setUserMode = mode => {
-      console.log('TCL: WrapperClass -> mode', mode);
       this.setState({userContext: {...this.state.userContext, userMode: mode}});
     };
 
     setUserFields = fields => {
-      console.log('TCL: WrapperClass -> fields', fields);
       this.setState(
         {
           userContext: {
