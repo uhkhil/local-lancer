@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, ToastAndroid, TouchableOpacity} from 'react-native';
-import {Text, DeckSwiper} from 'native-base';
+import {View, ToastAndroid, TouchableOpacity, Dimensions} from 'react-native';
+import {Text} from 'native-base';
 import {Pulse} from 'react-native-loader';
+import Carousel from 'react-native-snap-carousel';
 
 import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
 import {Api} from '../../services/Api';
@@ -10,6 +11,8 @@ import {AppRole} from '../../enums/AppRole';
 import Messages from './Messages';
 import ProfileButton from './ProfileButton';
 import styles from './HomeStyles';
+
+const {height, width} = Dimensions.get('window');
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -113,16 +116,20 @@ class HomeScreen extends React.Component {
         ) : (
           <View style={styles.deckContainer}>
             {this.state.cards.length ? (
-              <DeckSwiper
-                dataSource={this.state.cards}
-                renderItem={item => (
-                  <ProjectCard
-                    key={item._id}
-                    data={item}
-                    giveResponse={this.giveResponse}
-                  />
-                )}
-              />
+              <View style={styles.carouselWrapper}>
+                <Carousel
+                  data={this.state.cards}
+                  renderItem={card => (
+                    <ProjectCard
+                      key={card.index}
+                      data={card.item}
+                      giveResponse={this.giveResponse}
+                    />
+                  )}
+                  sliderWidth={width}
+                  itemWidth={350}
+                />
+              </View>
             ) : (
               this.renderEmpty()
             )}
