@@ -7,9 +7,9 @@ import {
   Left,
   Thumbnail,
   H1,
-  View,
   Button,
 } from 'native-base';
+import {TouchableOpacity} from 'react-native';
 
 import {Wrapper} from '../../hocs/Wrapper';
 import {styles} from './ProjectCardStyles';
@@ -40,13 +40,18 @@ class ProjectCardComponent extends React.Component {
   };
 
   tapped = () => {
+    const {viewDetails} = this.props;
     console.log('tapped');
+    viewDetails();
   };
 
   render() {
     const {theme} = this.props;
     return (
-      <View style={styles.cardContainer} onPress={this.tapped}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.cardContainer}
+        onPress={this.tapped}>
         <Card style={styles.card}>
           <CardItem style={styles.cardItemTop} header>
             <H1
@@ -72,7 +77,7 @@ class ProjectCardComponent extends React.Component {
             </Text>
           </CardItem>
         </Card>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

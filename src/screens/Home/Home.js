@@ -32,6 +32,13 @@ class HomeScreen extends React.Component {
     this.props.navigation.navigate('ChatList');
   };
 
+  viewCardDetails = data => {
+    this.props.navigation.navigate('CardDetails', {
+      data,
+      giveResponse: this.giveResponse,
+    });
+  };
+
   fetchCards = async () => {
     const userId = this.props.userContext.user._id;
     let response;
@@ -124,6 +131,7 @@ class HomeScreen extends React.Component {
                       key={card.index}
                       data={card.item}
                       giveResponse={this.giveResponse}
+                      viewDetails={this.viewCardDetails.bind(null, card.item)}
                     />
                   )}
                   sliderWidth={width}
