@@ -25,16 +25,18 @@ const styles = StyleSheet.create({
   dmIcon: {fontSize: 35, color: Colors.white},
   dmBadge: {position: 'absolute', left: 40},
   deckContainer: {
-    // padding: 40
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   card: {},
+  carouselWrapper: {height: 450},
   loading: {
     marginTop: 100,
     alignItems: 'center',
     alignContent: 'center',
   },
   empty: {
-    marginTop: 100,
     height: 200,
     alignItems: 'center',
     alignContent: 'center',

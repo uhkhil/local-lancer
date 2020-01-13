@@ -17,6 +17,7 @@ import {ProjectListScreen} from './screens/ProjectList/ProjectList';
 import {AppWrapper} from './hocs/Wrapper';
 import HomeScreen from './screens/Home/Home';
 import {Auth} from './services/Auth';
+import CardDetails from './screens/CardDetails/CardDetails';
 
 Auth.initSocialAuth();
 
@@ -32,6 +33,7 @@ const AppStack = createStackNavigator(
     ProjectAdd: ProjectAddScreen,
     ProfileSetup: ProfileSetupScreen,
     ProjectList: ProjectListScreen,
+    CardDetails: CardDetails,
   },
   {
     headerMode: 'none',
