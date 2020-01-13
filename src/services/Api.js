@@ -48,6 +48,8 @@ const onMessageAdd = (channelId, messageObj) =>
   Axios.post(`${baseUrl}/onMessageAdd`, {channelId, messageObj});
 const onEnterChat = (channelId, userId) =>
   Axios.get(`${baseUrl}/onEnterChat`, {params: {channelId, userId}});
+const getUserCard = (userId, role) =>
+  Axios.get(`${baseUrl}/getUserCard`, {params: {userId, role}});
 
 export const Api = {
   signedUp,
@@ -63,4 +65,5 @@ export const Api = {
   swipeFreelancer,
   onMessageAdd,
   onEnterChat,
+  getUserCard,
 };
