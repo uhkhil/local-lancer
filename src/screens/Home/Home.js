@@ -4,7 +4,7 @@ import {Text} from 'native-base';
 import {Pulse} from 'react-native-loader';
 import Carousel from 'react-native-snap-carousel';
 
-import {ProjectCard} from '../../components/ProjectCard/ProjectCard';
+import {LLCard} from '../../components/LLCard/LLCard';
 import {Api} from '../../services/Api';
 import {Wrapper} from '../../hocs/Wrapper';
 import {AppRole} from '../../enums/AppRole';
@@ -12,7 +12,7 @@ import Messages from './Messages';
 import ProfileButton from './ProfileButton';
 import styles from './HomeStyles';
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -32,9 +32,10 @@ class HomeScreen extends React.Component {
     this.props.navigation.navigate('ChatList');
   };
 
-  viewCardDetails = data => {
+  viewCardDetails = (data, role) => {
     this.props.navigation.navigate('CardDetails', {
       data,
+      role,
       giveResponse: this.giveResponse,
     });
   };
@@ -105,6 +106,9 @@ class HomeScreen extends React.Component {
   };
 
   render() {
+    const {userMode} = this.props.userContext;
+    const role =
+      userMode === AppRole.recruiter ? AppRole.freelancer : AppRole.recruiter;
     return (
       <View
         style={[styles.container, {backgroundColor: this.props.theme.primary}]}>
@@ -127,11 +131,17 @@ class HomeScreen extends React.Component {
                 <Carousel
                   data={this.state.cards}
                   renderItem={card => (
-                    <ProjectCard
+                    <LLCard
                       key={card.index}
+                      role={role}
+                      short={true}
                       data={card.item}
                       giveResponse={this.giveResponse}
-                      viewDetails={this.viewCardDetails.bind(null, card.item)}
+                      viewDetails={this.viewCardDetails.bind(
+                        null,
+                        card.item,
+                        role,
+                      )}
                     />
                   )}
                   sliderWidth={width}

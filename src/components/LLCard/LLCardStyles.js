@@ -5,9 +5,8 @@ export const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     flexDirection: 'column',
-    margin: 30,
-    marginTop: 20,
     alignSelf: 'center',
+    minWidth: 250,
   },
   card: {
     borderRadius: 10,

@@ -1,22 +1,11 @@
 import React from 'react';
-import {
-  Text,
-  Card,
-  CardItem,
-  Body,
-  Left,
-  Thumbnail,
-  H1,
-  View,
-  Button,
-  Icon,
-} from 'native-base';
+import {Text, CardItem, View, Button, Icon} from 'native-base';
 import {StyleSheet, ScrollView} from 'react-native';
 
 import {Wrapper} from '../../hocs/Wrapper';
 import {Colors} from '../../theme/Theme';
-
-const name = person => person.firstName + ' ' + person.lastName;
+import {LLCard} from '../../components/LLCard/LLCard';
+import {AppRole} from '../../enums/AppRole';
 
 class CardDetailsScreen extends React.Component {
   renderDomains = domains => {
@@ -42,38 +31,23 @@ class CardDetailsScreen extends React.Component {
   };
 
   giveResponse = response => {
-    const {data, giveResponse} = this.props.navigation.state.params;
-    giveResponse(data._id, response, null);
+    const {data, role, giveResponse} = this.props.navigation.state.params;
+    let freelancerId = null;
+    let projectId = data._id;
+    if (role === AppRole.freelancer) {
+      freelancerId = data.userId;
+      projectId = data.projectId;
+    }
+    giveResponse(projectId, response, freelancerId);
     this.props.navigation.pop();
   };
 
   render() {
     const {theme} = this.props;
-    const {data} = this.props.navigation.state.params;
+    const {data, role} = this.props.navigation.state.params;
     return (
       <ScrollView style={theme.background}>
-        <View style={[styles.cardContainer]} onPress={this.tapped}>
-          <Card style={styles.card}>
-            <CardItem style={styles.cardItemTop} header>
-              <H1 numberOfLines={2} style={[styles.title, theme.color]}>
-                {data.title}
-              </H1>
-            </CardItem>
-            {this.renderDomains(data.domains)}
-            <CardItem style={styles.cardItemBottom}>
-              <Left>
-                <Thumbnail source={{uri: data.owner.image}} />
-                <Body>
-                  <Text numberOfLines={1}>{name(data.owner)}</Text>
-                  <Text note>{data.owner.proximity}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem style={styles.cardItemBottom}>
-              <Text style={styles.description}>{data.description}</Text>
-            </CardItem>
-          </Card>
-        </View>
+        <LLCard data={data} short={false} role={role} />
         <View style={styles.actionContainer}>
           <Button
             rounded
@@ -103,8 +77,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     flexDirection: 'column',
-    margin: 20,
-    marginTop: 20,
     alignSelf: 'center',
   },
   card: {

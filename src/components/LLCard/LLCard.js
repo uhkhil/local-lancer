@@ -12,11 +12,12 @@ import {
 import {TouchableOpacity} from 'react-native';
 
 import {Wrapper} from '../../hocs/Wrapper';
-import {styles} from './ProjectCardStyles';
+import {styles} from './LLCardStyles';
+import {AppRole} from '../../enums/AppRole';
 
 const name = person => person.firstName + ' ' + person.lastName;
 
-class ProjectCardComponent extends React.Component {
+class CardComponent extends React.Component {
   renderDomains = domains => {
     let extra = 0;
     if (domains.length - 2 > 0) {
@@ -40,39 +41,50 @@ class ProjectCardComponent extends React.Component {
   };
 
   tapped = () => {
-    const {viewDetails} = this.props;
-    console.log('tapped');
-    viewDetails();
+    const {viewDetails, short} = this.props;
+    if (short) {
+      viewDetails();
+    }
   };
 
   render() {
-    const {theme} = this.props;
+    const {theme, short} = this.props;
+    const {data, role} = this.props;
+    let user;
+    if (role === AppRole.recruiter) {
+      user = data.owner;
+    } else {
+      user = data.user;
+    }
+    console.log('TCL: CardComponent -> render -> data', data);
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={styles.cardContainer}
+        style={[styles.cardContainer, {margin: short ? 30 : 20}]}
         onPress={this.tapped}>
         <Card style={styles.card}>
           <CardItem style={styles.cardItemTop} header>
-            <H1
-              numberOfLines={2}
-              onPress={this.toggleExpansion}
-              style={[styles.title, theme.color]}>
-              {this.props.data.title}
-            </H1>
+            {role === AppRole.recruiter ? (
+              <H1
+                numberOfLines={short ? 2 : null}
+                onPress={this.toggleExpansion}
+                style={[styles.title, theme.color]}>
+                {this.props.data.title}
+              </H1>
+            ) : null}
           </CardItem>
           {this.renderDomains(this.props.data.domains)}
           <CardItem style={styles.cardItemBottom}>
             <Left>
-              <Thumbnail source={{uri: this.props.data.owner.image}} />
+              <Thumbnail source={{uri: user.image}} />
               <Body>
-                <Text numberOfLines={1}>{name(this.props.data.owner)}</Text>
-                <Text note>{this.props.data.owner.proximity}</Text>
+                <Text numberOfLines={1}>{name(user)}</Text>
+                <Text note>{user.proximity}</Text>
               </Body>
             </Left>
           </CardItem>
           <CardItem style={styles.cardItemBottom}>
-            <Text style={styles.description} numberOfLines={3}>
+            <Text style={styles.description} numberOfLines={short ? 3 : null}>
               {this.props.data.description}
             </Text>
           </CardItem>
@@ -82,4 +94,4 @@ class ProjectCardComponent extends React.Component {
   }
 }
 
-export const ProjectCard = Wrapper(ProjectCardComponent);
+export const LLCard = Wrapper(CardComponent);

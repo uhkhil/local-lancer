@@ -6,12 +6,10 @@ import {Wrapper} from '../../hocs/Wrapper';
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
-    console.log('TCL: AuthLoadingScreen -> constructor -> props', props);
   }
 
   async componentDidMount() {
     this.authStateSubscriber = auth().onAuthStateChanged(async user => {
-      console.log('TCL: AuthLoadingScreen -> componentDidMount -> user', user);
       if (!user) {
         this.props.navigation.navigate('Auth');
       } else {
