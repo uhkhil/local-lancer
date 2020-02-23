@@ -24,6 +24,24 @@ class HomeScreen extends React.Component {
     this.fetchCards();
   }
 
+  openMatchedModal = cardData => {
+    const user = cardData.user;
+    const self = this.props.userContext.user;
+    this.props.navigation.navigate('MatchedModal', {
+      firstName: self.firstName,
+      secondName: user.firstName,
+      firstImage: self.image,
+      secondImage: user.image,
+      closeModal: this.closeModal,
+      openChat: this.openChat,
+    });
+  };
+  closeModal = () => this.props.navigation.pop();
+  openChat = () => {
+    this.props.navigation.pop();
+    this.props.navigation.navigate('ChatList');
+  };
+
   viewProfile = () => {
     this.props.navigation.navigate('MyProfile');
   };
@@ -57,7 +75,7 @@ class HomeScreen extends React.Component {
     this.setState({loading: false});
   };
 
-  giveResponse = async (projectId, response, freelancerId = null) => {
+  giveResponse = async (projectId, response, freelancerId = null, cardData) => {
     const userId = this.props.userContext.user._id;
     const userMode = this.props.userContext.userMode;
     let result;
@@ -83,7 +101,7 @@ class HomeScreen extends React.Component {
         console.warn('Unknown userMode');
     }
     if (result.data.justMatched) {
-      ToastAndroid.show('You matched!', ToastAndroid.SHORT);
+      this.openMatchedModal(cardData);
     } else {
       ToastAndroid.show(
         'No match yet. User response has been logged.',

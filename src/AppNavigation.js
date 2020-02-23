@@ -18,6 +18,7 @@ import {AppWrapper} from './hocs/Wrapper';
 import HomeScreen from './screens/Home/Home';
 import {Auth} from './services/Auth';
 import CardDetails from './screens/CardDetails/CardDetails';
+import {MatchedModal} from './screens/MatchedModal/MatchedModal';
 
 Auth.initSocialAuth();
 
@@ -34,6 +35,7 @@ const AppStack = createStackNavigator(
     ProfileSetup: ProfileSetupScreen,
     ProjectList: ProjectListScreen,
     CardDetails: CardDetails,
+    MatchedModal: MatchedModal,
   },
   {
     headerMode: 'none',

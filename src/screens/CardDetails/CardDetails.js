@@ -38,7 +38,7 @@ class CardDetailsScreen extends React.Component {
       freelancerId = data.userId;
       projectId = data.projectId;
     }
-    giveResponse(projectId, response, freelancerId);
+    giveResponse(projectId, response, freelancerId, data);
     this.props.navigation.pop();
   };
 
