@@ -32,7 +32,6 @@ class ProjectList extends React.Component {
 
   fetchProjects = async () => {
     const result = await Api.getProjects(this.user._id);
-    console.log('TCL: ProjectListScreen -> fetchProjects -> result', result);
     this.setState({
       projects: result.data.data,
     });

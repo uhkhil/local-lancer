@@ -59,16 +59,15 @@ class HomeScreen extends React.Component {
   };
 
   fetchCards = async () => {
-    const userId = this.props.userContext.user._id;
     let response;
     this.setState({loading: true});
     switch (this.props.userContext.userMode) {
       case AppRole.freelancer:
-        response = await Api.exploreProjects(userId);
+        response = await Api.exploreProjects();
         this.setState({cards: response.data.data});
         break;
       case AppRole.recruiter:
-        response = await Api.exploreFreelancers(userId);
+        response = await Api.exploreFreelancers();
         this.setState({cards: response.data.data});
         break;
     }
@@ -76,22 +75,16 @@ class HomeScreen extends React.Component {
   };
 
   giveResponse = async (projectId, response, freelancerId = null, cardData) => {
-    const userId = this.props.userContext.user._id;
     const userMode = this.props.userContext.userMode;
     let result;
     switch (userMode) {
       case AppRole.freelancer:
-        result = await Api.swipeProject(userId, projectId, response);
+        result = await Api.swipeProject(projectId, response);
         const newProjects = this.state.cards.filter(p => p._id !== projectId);
         this.setState({cards: newProjects});
         break;
       case AppRole.recruiter:
-        result = await Api.swipeFreelancer(
-          userId,
-          projectId,
-          freelancerId,
-          response,
-        );
+        result = await Api.swipeFreelancer(projectId, freelancerId, response);
         const newFreelancers = this.state.cards.filter(
           f => f.userId !== freelancerId,
         );
