@@ -39,6 +39,11 @@ class HomeScreen extends React.Component {
     this.fetchLocation();
   };
 
+  sendLocation = async () => {
+    const {currentLocation} = this.state;
+    await Api.updateUser(currentLocation);
+  };
+
   fetchLocation = async () => {
     const granted = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -48,6 +53,7 @@ class HomeScreen extends React.Component {
         position => {
           this.setState({currentLocation: position.coords});
           this.fetchCards();
+          this.sendLocation();
         },
         error => {
           console.warn('error', error);

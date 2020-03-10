@@ -22,6 +22,7 @@ Axios.interceptors.request.use(
 
 const signedUp = data => Axios.post(`${baseUrl}/users`, data);
 const getUserInfo = () => Axios.get(`${baseUrl}/users`);
+const updateUser = data => Axios.patch(`${baseUrl}/users`, data);
 const createFreelancerProfile = data =>
   Axios.post(`${baseUrl}/freelancerProfiles`, data);
 const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancerProfiles`);
@@ -65,6 +66,7 @@ const getUserCard = role =>
 export const Api = {
   signedUp,
   getUserInfo,
+  updateUser,
   createFreelancerProfile,
   getFreelancerProfile,
   createRecruiterProfile,
