@@ -56,7 +56,6 @@ class CardComponent extends React.Component {
     } else {
       user = data.user;
     }
-    console.log('TCL: CardComponent -> render -> data', data);
     return (
       <TouchableOpacity
         activeOpacity={1}

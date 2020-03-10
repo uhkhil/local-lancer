@@ -1,43 +1,55 @@
 import Axios from 'axios';
+import {firebase} from '@react-native-firebase/auth';
+const baseUrl = 'https://local-lancer-server-staging.herokuapp.com/api/v0';
 
-const baseUrl = 'https://local-lancer.herokuapp.com/api';
-// const baseUrl = 'http://192.168.1.126:8080/api';
+// Add necessary headers like Auth
+Axios.interceptors.request.use(
+  async config => {
+    const currentUser = firebase.auth().currentUser;
+    const bearerToken = `Bearer ${await currentUser.getIdToken()}`;
+    config.headers = {
+      ...config.headers,
+      Authorization: bearerToken,
+    };
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
-const signedUp = data => Axios.post(`${baseUrl}/signedUp`, data);
-const getUserInfo = userId =>
-  Axios.get(`${baseUrl}/getUserInfo?userId=${userId}`);
-const createFreelancerProfile = (userId, data) =>
-  Axios.post(`${baseUrl}/createFreelancerProfile?userId=${userId}`, data);
-const getFreelancerProfile = userId =>
-  Axios.get(`${baseUrl}/getFreelancerProfile?userId=${userId}`);
-const createRecruiterProfile = (userId, data) =>
-  Axios.post(`${baseUrl}/createRecruiterProfile?userId=${userId}`, data);
-const createProject = data => Axios.post(`${baseUrl}/createProject`, data);
-const getProjects = userId =>
-  Axios.get(`${baseUrl}/getProjects?userId=${userId}`);
-const exploreProjects = userId =>
-  Axios.get(`${baseUrl}/exploreProjects?userId=${userId}`);
-const swipeProject = (userId, projectId, response) =>
-  Axios.get(`${baseUrl}/swipeProject`, {
-    params: {
-      userId,
+// TODO: Handle 403 responses
+
+const signedUp = data => Axios.post(`${baseUrl}/users`, data);
+const getUserInfo = () => Axios.get(`${baseUrl}/users`);
+const updateUser = data => Axios.patch(`${baseUrl}/users`, data);
+const createFreelancerProfile = data =>
+  Axios.post(`${baseUrl}/freelancerProfiles`, data);
+const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancerProfiles`);
+const createRecruiterProfile = data =>
+  Axios.post(`${baseUrl}/recruiterProfiles`, data);
+const createProject = data => Axios.post(`${baseUrl}/projects`, data);
+const getProjects = () => Axios.get(`${baseUrl}/projects`);
+const exploreProjects = coords =>
+  Axios.post(`${baseUrl}/exploreProjects`, {
+    longitude: coords.longitude,
+    latitude: coords.latitude,
+  });
+const swipeProject = (projectId, response) =>
+  Axios.post(`${baseUrl}/swipeProject`, {
+    body: {
       projectId,
       response,
     },
   });
-const exploreFreelancers = userId =>
-  Axios.get(`${baseUrl}/exploreFreelancers?userId=${userId}`);
-const swipeFreelancer = (userId, projectId, freelancerId, response) => {
-  console.log(
-    'TCL: userId, projectId, freelancerId, response',
-    userId,
-    projectId,
-    freelancerId,
-    response,
-  );
-  return Axios.get(`${baseUrl}/swipeFreelancer`, {
-    params: {
-      userId,
+const exploreFreelancers = coords =>
+  Axios.post(`${baseUrl}/exploreFreelancers`, {
+    longitude: coords.longitude,
+    latitude: coords.latitude,
+  });
+const swipeFreelancer = (projectId, freelancerId, response) => {
+  return Axios.post(`${baseUrl}/swipeFreelancer`, {
+    body: {
       projectId,
       freelancerId,
       response,
@@ -46,14 +58,15 @@ const swipeFreelancer = (userId, projectId, freelancerId, response) => {
 };
 const onMessageAdd = (channelId, messageObj) =>
   Axios.post(`${baseUrl}/onMessageAdd`, {channelId, messageObj});
-const onEnterChat = (channelId, userId) =>
-  Axios.get(`${baseUrl}/onEnterChat`, {params: {channelId, userId}});
-const getUserCard = (userId, role) =>
-  Axios.get(`${baseUrl}/getUserCard`, {params: {userId, role}});
+const onEnterChat = channelId =>
+  Axios.get(`${baseUrl}/onEnterChat`, {params: {channelId}});
+const getUserCard = role =>
+  Axios.get(`${baseUrl}/getUserCard`, {params: {role}});
 
 export const Api = {
   signedUp,
   getUserInfo,
+  updateUser,
   createFreelancerProfile,
   getFreelancerProfile,
   createRecruiterProfile,

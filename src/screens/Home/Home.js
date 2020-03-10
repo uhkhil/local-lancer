@@ -1,8 +1,15 @@
 import React from 'react';
-import {View, ToastAndroid, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  View,
+  ToastAndroid,
+  TouchableOpacity,
+  Dimensions,
+  PermissionsAndroid,
+} from 'react-native';
 import {Text} from 'native-base';
 import {Pulse} from 'react-native-loader';
 import Carousel from 'react-native-snap-carousel';
+import Geolocation from '@react-native-community/geolocation';
 
 import {LLCard} from '../../components/LLCard/LLCard';
 import {Api} from '../../services/Api';
@@ -20,9 +27,44 @@ class HomeScreen extends React.Component {
     this.state = {
       cards: [],
       loading: false,
+      currentLocation: {},
     };
-    this.fetchCards();
+    this.init();
   }
+
+  init = async () => {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    this.fetchLocation();
+  };
+
+  sendLocation = async () => {
+    const {currentLocation} = this.state;
+    await Api.updateUser(currentLocation);
+  };
+
+  fetchLocation = async () => {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    if (granted) {
+      Geolocation.getCurrentPosition(
+        position => {
+          this.setState({currentLocation: position.coords});
+          this.fetchCards();
+          this.sendLocation();
+        },
+        error => {
+          console.warn('error', error);
+        },
+        {
+          enableHighAccuracy: true,
+          useSignificantChanges: true,
+        },
+      );
+    }
+  };
 
   openMatchedModal = cardData => {
     const user = cardData.user;
@@ -59,16 +101,16 @@ class HomeScreen extends React.Component {
   };
 
   fetchCards = async () => {
-    const userId = this.props.userContext.user._id;
     let response;
+    const {longitude, latitude} = this.state.currentLocation;
     this.setState({loading: true});
     switch (this.props.userContext.userMode) {
       case AppRole.freelancer:
-        response = await Api.exploreProjects(userId);
+        response = await Api.exploreProjects({longitude, latitude});
         this.setState({cards: response.data.data});
         break;
       case AppRole.recruiter:
-        response = await Api.exploreFreelancers(userId);
+        response = await Api.exploreFreelancers({longitude, latitude});
         this.setState({cards: response.data.data});
         break;
     }
@@ -76,22 +118,16 @@ class HomeScreen extends React.Component {
   };
 
   giveResponse = async (projectId, response, freelancerId = null, cardData) => {
-    const userId = this.props.userContext.user._id;
     const userMode = this.props.userContext.userMode;
     let result;
     switch (userMode) {
       case AppRole.freelancer:
-        result = await Api.swipeProject(userId, projectId, response);
+        result = await Api.swipeProject(projectId, response);
         const newProjects = this.state.cards.filter(p => p._id !== projectId);
         this.setState({cards: newProjects});
         break;
       case AppRole.recruiter:
-        result = await Api.swipeFreelancer(
-          userId,
-          projectId,
-          freelancerId,
-          response,
-        );
+        result = await Api.swipeFreelancer(projectId, freelancerId, response);
         const newFreelancers = this.state.cards.filter(
           f => f.userId !== freelancerId,
         );

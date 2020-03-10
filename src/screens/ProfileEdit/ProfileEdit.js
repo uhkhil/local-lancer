@@ -12,8 +12,8 @@ class ProfileEdit extends React.Component {
     this.fetchUserProfile(props.userContext.user._id);
   }
 
-  fetchUserProfile = userId => {
-    Api.getFreelancerProfile(userId).then(res => {
+  fetchUserProfile = () => {
+    Api.getFreelancerProfile().then(res => {
       const data = res.data;
       this.setState({output: JSON.stringify(data, null, 2)});
     });

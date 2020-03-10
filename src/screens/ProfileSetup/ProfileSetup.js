@@ -62,14 +62,6 @@ class ProfileSetupScreen extends React.PureComponent {
       this.next();
     }, 1000);
     this.userId = this.props.userContext.user._id;
-    console.log(
-      'TCL: ProfileSetupScreen -> componentDidMount -> this.props.userContext',
-      this.props.userContext,
-    );
-    console.log(
-      'TCL: ProfileSetupScreen -> componentDidMount -> this.props.userContext.user',
-      this.props.userContext.user,
-    );
   }
 
   selectRole = role => {
@@ -88,8 +80,6 @@ class ProfileSetupScreen extends React.PureComponent {
         this.submitProfile(role);
         break;
       default:
-        console.log('TCL: ProfileSetup -> selectRole -> role', role);
-        console.log('Wrong role selected');
     }
   };
 
@@ -121,9 +111,6 @@ class ProfileSetupScreen extends React.PureComponent {
   };
 
   submitProfile = role => {
-    console.log('will submit profile');
-    console.log('TCL: ProfileSetup -> submitProfile -> role', role);
-
     let body = {};
     if (role === AppRole.recruiter) {
       this.props.userContext.setUserMode(1);
@@ -132,16 +119,11 @@ class ProfileSetupScreen extends React.PureComponent {
         lastName: this.state.lastName,
         role,
       };
-      console.log('TCL: ProfileSetupScreen -> body', body);
-      console.log('TCL: ProfileSetupScreen -> this.userId', this.userId);
-      Api.createRecruiterProfile(this.userId, body)
+      Api.createRecruiterProfile(body)
         .then(res => {
-          console.log('TCL: ProfileSetup -> submitProfile -> res', res);
           this.props.navigation.navigate('Home');
         })
-        .catch(err => {
-          console.log('TCL: ProfileSetup -> submitProfile -> err', err);
-        });
+        .catch(err => {});
     } else {
       this.props.userContext.setUserMode(0);
       body = {
@@ -149,22 +131,17 @@ class ProfileSetupScreen extends React.PureComponent {
         lastName: this.state.lastName,
         domains: this.state.selectedDomains,
       };
-      Api.createFreelancerProfile(this.userId, body)
+      Api.createFreelancerProfile(body)
         .then(res => {
-          console.log('TCL: ProfileSetup -> submitProfile -> res', res);
           this.props.navigation.navigate('Home');
         })
-        .catch(err => {
-          console.log('TCL: ProfileSetup -> submitProfile -> err', err);
-        });
+        .catch(err => {});
     }
     // this.props.navigation.navigate('Home');
   };
 
   next = () => {
-    console.log('TCL: ProfileSetup -> next -> width', width);
     const newWidth = width * (this.state.pageIndex + 1);
-    console.log('TCL: ProfileSetup -> next -> newWidth', newWidth);
     this.refs._scrollView.scrollTo({x: newWidth, y: 0});
     // TODO: This should be handled on scroll end
     this.setState({pageIndex: this.state.pageIndex + 1});
@@ -224,22 +201,15 @@ class ProfileSetupScreen extends React.PureComponent {
     if (already) {
       return;
     }
-    console.log('TCL: ProfileSetup -> addDomain -> value', value);
     const theOne = allDomains.find(dom => dom._id === value);
-    console.log('TCL: ProfileSetup -> addDomain -> theOne', theOne);
     selectedDomains.push(theOne);
     this.setState({
       selectedDomains,
       selectedDomain: value,
     });
-    console.log(
-      'TCL: ProfileSetup -> addDomain -> selectedDomains',
-      selectedDomains,
-    );
   };
 
   removeDomain = value => {
-    console.log('TCL: ProfileSetup -> value', value);
     const selectedDomains = this.state.selectedDomains;
     const newSelectedDomains = selectedDomains.filter(dom => dom._id !== value);
     this.setState({selectedDomains: newSelectedDomains});

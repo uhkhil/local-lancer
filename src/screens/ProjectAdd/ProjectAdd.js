@@ -44,7 +44,6 @@ const allDomains = [
 class ProjectAdd extends React.Component {
   constructor(props) {
     super(props);
-    console.log('TCL: ProjectAdd -> constructor -> props', props);
     this.state = {
       title: '',
       description: '',
@@ -67,10 +66,8 @@ class ProjectAdd extends React.Component {
       days: parseInt(days),
       userId: this.user._id,
     };
-    console.log('TCL: ProjectAddScreen -> submitProject -> body', body);
     console.log(JSON.stringify(body));
     Api.createProject(body).then(res => {
-      console.log('TCL: ProjectAddScreen -> submitProject -> res', res);
       this.next();
       this.updateList();
     });
@@ -88,8 +85,6 @@ class ProjectAdd extends React.Component {
         this.submitProfile(role);
         break;
       default:
-        console.log('TCL: ProfileSetup -> selectRole -> role', role);
-        console.log('Wrong role selected');
     }
   };
 
@@ -138,8 +133,6 @@ class ProjectAdd extends React.Component {
   };
 
   submitProfile = role => {
-    console.log('will submit profile');
-    console.log('TCL: ProfileSetup -> submitProfile -> role', role);
     let body = {};
     if (role === AppRole.recruiter) {
       body = {
@@ -149,12 +142,9 @@ class ProjectAdd extends React.Component {
       };
       Api.createRecruiterProfile(this.user._id, body)
         .then(res => {
-          console.log('TCL: ProfileSetup -> submitProfile -> res', res);
           this.props.navigation.navigate('Home');
         })
-        .catch(err => {
-          console.log('TCL: ProfileSetup -> submitProfile -> err', err);
-        });
+        .catch(err => {});
     } else {
       body = {
         firstName: this.state.firstName,
@@ -163,20 +153,15 @@ class ProjectAdd extends React.Component {
       };
       Api.createFreelancerProfile(this.user._id, body)
         .then(res => {
-          console.log('TCL: ProfileSetup -> submitProfile -> res', res);
           this.props.navigation.navigate('Home');
         })
-        .catch(err => {
-          console.log('TCL: ProfileSetup -> submitProfile -> err', err);
-        });
+        .catch(err => {});
     }
     // this.props.navigation.navigate('Home');
   };
 
   next = () => {
-    console.log('TCL: ProfileSetup -> next -> width', width);
     const newWidth = width * (this.state.pageIndex + 1);
-    console.log('TCL: ProfileSetup -> next -> newWidth', newWidth);
     this.refs._scrollView.scrollTo({x: newWidth, y: 0});
     // TODO: This should be handled on scroll end
     this.setState({pageIndex: this.state.pageIndex + 1});
@@ -338,22 +323,15 @@ class ProjectAdd extends React.Component {
     if (already) {
       return;
     }
-    console.log('TCL: ProfileSetup -> addDomain -> value', value);
     const theOne = allDomains.find(dom => dom._id === value);
-    console.log('TCL: ProfileSetup -> addDomain -> theOne', theOne);
     selectedDomains.push(theOne);
     this.setState({
       selectedDomains,
       selectedDomain: value,
     });
-    console.log(
-      'TCL: ProfileSetup -> addDomain -> selectedDomains',
-      selectedDomains,
-    );
   };
 
   removeDomain = value => {
-    console.log('TCL: ProfileSetup -> value', value);
     const selectedDomains = this.state.selectedDomains;
     const newSelectedDomains = selectedDomains.filter(dom => dom._id !== value);
     this.setState({selectedDomains: newSelectedDomains});
