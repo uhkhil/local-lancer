@@ -1,5 +1,6 @@
 {
-  "name": "LocalLancer",
+  "name": "local-lancer",
+  "description": "React Native based application to find freelancers and projects nearby.",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,7 +10,9 @@
     "test": "jest",
     "lint": "eslint ."
   },
+  "license": "UNLICENSED",
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/google-signin": "^3.0.3",
     "@react-native-firebase/app": "^6.0.3",
     "@react-native-firebase/auth": "^6.0.3",

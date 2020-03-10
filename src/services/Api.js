@@ -29,18 +29,26 @@ const createRecruiterProfile = data =>
   Axios.post(`${baseUrl}/recruiterProfiles`, data);
 const createProject = data => Axios.post(`${baseUrl}/projects`, data);
 const getProjects = () => Axios.get(`${baseUrl}/projects`);
-const exploreProjects = () => Axios.get(`${baseUrl}/exploreProjects`);
+const exploreProjects = coords =>
+  Axios.post(`${baseUrl}/exploreProjects`, {
+    longitude: coords.longitude,
+    latitude: coords.latitude,
+  });
 const swipeProject = (projectId, response) =>
-  Axios.get(`${baseUrl}/swipeProject`, {
-    params: {
+  Axios.post(`${baseUrl}/swipeProject`, {
+    body: {
       projectId,
       response,
     },
   });
-const exploreFreelancers = () => Axios.get(`${baseUrl}/exploreFreelancers`);
+const exploreFreelancers = coords =>
+  Axios.post(`${baseUrl}/exploreFreelancers`, {
+    longitude: coords.longitude,
+    latitude: coords.latitude,
+  });
 const swipeFreelancer = (projectId, freelancerId, response) => {
-  return Axios.get(`${baseUrl}/swipeFreelancer`, {
-    params: {
+  return Axios.post(`${baseUrl}/swipeFreelancer`, {
+    body: {
       projectId,
       freelancerId,
       response,

@@ -1,8 +1,15 @@
 import React from 'react';
-import {View, ToastAndroid, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  View,
+  ToastAndroid,
+  TouchableOpacity,
+  Dimensions,
+  PermissionsAndroid,
+} from 'react-native';
 import {Text} from 'native-base';
 import {Pulse} from 'react-native-loader';
 import Carousel from 'react-native-snap-carousel';
+import Geolocation from '@react-native-community/geolocation';
 
 import {LLCard} from '../../components/LLCard/LLCard';
 import {Api} from '../../services/Api';
@@ -20,9 +27,38 @@ class HomeScreen extends React.Component {
     this.state = {
       cards: [],
       loading: false,
+      currentLocation: {},
     };
-    this.fetchCards();
+    this.init();
   }
+
+  init = async () => {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    this.fetchLocation();
+  };
+
+  fetchLocation = async () => {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    if (granted) {
+      Geolocation.getCurrentPosition(
+        position => {
+          this.setState({currentLocation: position.coords});
+          this.fetchCards();
+        },
+        error => {
+          console.warn('error', error);
+        },
+        {
+          enableHighAccuracy: true,
+          useSignificantChanges: true,
+        },
+      );
+    }
+  };
 
   openMatchedModal = cardData => {
     const user = cardData.user;
@@ -60,14 +96,15 @@ class HomeScreen extends React.Component {
 
   fetchCards = async () => {
     let response;
+    const {longitude, latitude} = this.state.currentLocation;
     this.setState({loading: true});
     switch (this.props.userContext.userMode) {
       case AppRole.freelancer:
-        response = await Api.exploreProjects();
+        response = await Api.exploreProjects({longitude, latitude});
         this.setState({cards: response.data.data});
         break;
       case AppRole.recruiter:
-        response = await Api.exploreFreelancers();
+        response = await Api.exploreFreelancers({longitude, latitude});
         this.setState({cards: response.data.data});
         break;
     }
