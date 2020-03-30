@@ -45,22 +45,53 @@ const allDomains = [
 class ProfileSetupScreen extends React.PureComponent {
   constructor(props) {
     super(props);
-    const user = props.userContext.user;
+    const {user, userMode} = props.userContext;
+    console.log(
+      'ProfileSetupScreen -> constructor -> props.navigation',
+      props.navigation,
+    );
+    const {newProfile} = props.navigation.state.params;
     this.state = {
       firstName: user.firstName,
       lastName: user.lastName,
       image: user.image,
-      role: null,
+      role: userMode,
       pageIndex: 0,
       selectedDomain: undefined,
       selectedDomains: [],
+      newProfile,
     };
   }
 
+  fetchProfileInfo = async () => {
+    try {
+      const {userMode} = this.props.userContext;
+      if (userMode === AppRole.freelancer) {
+        const res = await Api.getFreelancerProfile();
+        const {data} = res.data;
+        const domains = data[0].freelancerProfile[0].domains;
+        console.log(
+          'ProfileSetupScreen -> fetchProfileInfo -> domains',
+          domains,
+        );
+        if (domains) {
+          this.setState({selectedDomains: domains});
+        }
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
   componentDidMount() {
-    setTimeout(() => {
-      this.next();
-    }, 1000);
+    const {newProfile} = this.state;
+    if (newProfile) {
+      setTimeout(() => {
+        this.next();
+      }, 1000);
+    } else {
+      this.fetchProfileInfo();
+    }
     this.userId = this.props.userContext.user._id;
   }
 
@@ -111,31 +142,50 @@ class ProfileSetupScreen extends React.PureComponent {
   };
 
   submitProfile = role => {
+    const {newProfile, firstName, lastName, selectedDomains} = this.state;
     let body = {};
     if (role === AppRole.recruiter) {
       this.props.userContext.setUserMode(1);
       body = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
+        firstName,
+        lastName,
         role,
       };
-      Api.createRecruiterProfile(body)
-        .then(res => {
-          this.props.navigation.navigate('Home');
-        })
-        .catch(err => {});
+      if (newProfile) {
+        Api.createRecruiterProfile(body)
+          .then(res => {
+            this.props.navigation.navigate('Home');
+          })
+          .catch(err => {});
+      } else {
+        Api.updateRecruiterProfile(body)
+          .then(res => {
+            this.props.userContext.setUserFields({firstName, lastName});
+            this.props.navigation.navigate('Home');
+          })
+          .catch(err => {});
+      }
     } else {
       this.props.userContext.setUserMode(0);
       body = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        domains: this.state.selectedDomains,
+        firstName,
+        lastName,
+        domains: selectedDomains,
       };
-      Api.createFreelancerProfile(body)
-        .then(res => {
-          this.props.navigation.navigate('Home');
-        })
-        .catch(err => {});
+      if (newProfile) {
+        Api.createFreelancerProfile(body)
+          .then(res => {
+            this.props.navigation.navigate('Home');
+          })
+          .catch(err => {});
+      } else {
+        Api.updateFreelancerProfile(body)
+          .then(res => {
+            this.props.userContext.setUserFields({firstName, lastName});
+            this.props.navigation.navigate('Home');
+          })
+          .catch(err => {});
+      }
     }
     // this.props.navigation.navigate('Home');
   };
@@ -146,6 +196,16 @@ class ProfileSetupScreen extends React.PureComponent {
     // TODO: This should be handled on scroll end
     this.setState({pageIndex: this.state.pageIndex + 1});
   };
+
+  renderNextButton(currentSection) {
+    return (
+      <Button
+        style={styles.button}
+        onPress={() => this.nextPage(currentSection)}>
+        <Text style={[styles.buttonText, this.props.theme.color]}>Next</Text>
+      </Button>
+    );
+  }
 
   renderWelcome = () => {
     return (
@@ -158,11 +218,15 @@ class ProfileSetupScreen extends React.PureComponent {
   };
 
   renderName = () => {
-    const {firstName, lastName} = this.state;
+    const {firstName, lastName, newProfile} = this.state;
+    let text = "Let's start with your name";
+    if (!newProfile) {
+      text = 'Your name visible to others';
+    }
     return (
       <View style={[styles.singlePage, this.props.theme.background]}>
         <View style={styles.mainSection}>
-          <Text style={styles.bigText}>Let's start with your name</Text>
+          <Text style={styles.bigText}>{text}</Text>
           <View style={styles.nameContainer}>
             <TextInput
               style={styles.input}
@@ -184,11 +248,7 @@ class ProfileSetupScreen extends React.PureComponent {
         </View>
         <View style={styles.buttonSection}>
           <View style={styles.buttonContainer}>
-            <Button style={styles.button} onPress={() => this.nextPage('name')}>
-              <Text style={[styles.buttonText, this.props.theme.color]}>
-                Next
-              </Text>
-            </Button>
+            {this.renderNextButton('name')}
           </View>
         </View>
       </View>
@@ -230,7 +290,91 @@ class ProfileSetupScreen extends React.PureComponent {
       </View>
     ));
 
+  renderPicker = () => {
+    return (
+      <View style={[styles.singlePage, this.props.theme.background]}>
+        <View style={styles.twoButtonContainer}>
+          <Button
+            style={styles.twoButton}
+            onPress={() => this.selectRole(AppRole.freelancer)}>
+            <Text style={[styles.twoButtonText, this.props.theme.color]}>
+              I am a Freelancer
+            </Text>
+          </Button>
+          <Button
+            style={styles.twoButton}
+            onPress={() => this.selectRole(AppRole.recruiter)}>
+            <Text style={[styles.twoButtonText, this.props.theme.color]}>
+              I am a Recruiter
+            </Text>
+          </Button>
+        </View>
+      </View>
+    );
+  };
+
+  renderDomain = () => {
+    return (
+      <View style={[styles.singlePage, this.props.theme.background]}>
+        <View style={styles.pickerSection}>
+          <Item picker>
+            <Picker
+              mode="dropdown"
+              style={{width: undefined}}
+              placeholder="Select Domain"
+              placeholderStyle={{color: Colors.white}}
+              placeholderIconColor={Colors.white}
+              textStyle={{color: Colors.white, textAlign: 'center'}}
+              itemStyle={{
+                backgroundColor: '#d3d3d3',
+                marginLeft: 0,
+                paddingLeft: 10,
+              }}
+              itemTextStyle={{color: '#788ad2'}}
+              selectedValue={this.state.selectedDomain}
+              onValueChange={event => {
+                this.addDomain(event);
+              }}>
+              {this.renderDomainPickerItems()}
+            </Picker>
+          </Item>
+          <View style={styles.chipsContainer}>
+            {this.renderSelectedDomains(this.state.selectedDomains)}
+          </View>
+        </View>
+        <View style={styles.buttonSection}>
+          <View style={styles.buttonContainer}>
+            {this.renderNextButton('domain')}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderAllSet = () => {
+    return (
+      <View style={[styles.singlePage, this.props.theme.background]}>
+        <View style={styles.bigTextContainer}>
+          <Image
+            style={{
+              height: 100,
+              width: 100,
+              alignSelf: 'center',
+              marginTop: -100,
+            }}
+            source={require('../../assets/icons/check-mark.png')}
+          />
+          <View style={{marginTop: 40}}>
+            <Text style={styles.bigText}>Great!</Text>
+            <Text style={styles.bigText}>You're all set!</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   render() {
+    const {newProfile} = this.state;
     return (
       <ScrollView
         ref="_scrollView"
@@ -238,85 +382,11 @@ class ProfileSetupScreen extends React.PureComponent {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}>
-        {this.renderWelcome()}
+        {newProfile ? this.renderWelcome() : null}
         {this.renderName()}
-        {/* </KeyboardAvoidingView> */}
-        <View style={[styles.singlePage, this.props.theme.background]}>
-          <View style={styles.twoButtonContainer}>
-            <Button
-              style={styles.twoButton}
-              onPress={() => this.selectRole(AppRole.freelancer)}>
-              <Text style={[styles.twoButtonText, this.props.theme.color]}>
-                I am a Freelancer
-              </Text>
-            </Button>
-            <Button
-              style={styles.twoButton}
-              onPress={() => this.selectRole(AppRole.recruiter)}>
-              <Text style={[styles.twoButtonText, this.props.theme.color]}>
-                I am a Recruiter
-              </Text>
-            </Button>
-          </View>
-        </View>
-        {this.state.role === AppRole.freelancer ? (
-          <View style={[styles.singlePage, this.props.theme.background]}>
-            <View style={styles.pickerSection}>
-              <Item picker>
-                <Picker
-                  mode="dropdown"
-                  style={{width: undefined}}
-                  placeholder="Select Domain"
-                  placeholderStyle={{color: Colors.white}}
-                  placeholderIconColor={Colors.white}
-                  textStyle={{color: Colors.white, textAlign: 'center'}}
-                  itemStyle={{
-                    backgroundColor: '#d3d3d3',
-                    marginLeft: 0,
-                    paddingLeft: 10,
-                  }}
-                  itemTextStyle={{color: '#788ad2'}}
-                  selectedValue={this.state.selectedDomain}
-                  onValueChange={event => {
-                    this.addDomain(event);
-                  }}>
-                  {this.renderDomainPickerItems()}
-                </Picker>
-              </Item>
-              <View style={styles.chipsContainer}>
-                {this.renderSelectedDomains(this.state.selectedDomains)}
-              </View>
-            </View>
-            <View style={styles.buttonSection}>
-              <View style={styles.buttonContainer}>
-                <Button
-                  style={styles.button}
-                  onPress={() => this.nextPage('domain')}>
-                  <Text style={[styles.buttonText, this.props.theme.color]}>
-                    Next
-                  </Text>
-                </Button>
-              </View>
-            </View>
-          </View>
-        ) : null}
-        <View style={[styles.singlePage, this.props.theme.background]}>
-          <View style={styles.bigTextContainer}>
-            <Image
-              style={{
-                height: 100,
-                width: 100,
-                alignSelf: 'center',
-                marginTop: -100,
-              }}
-              source={require('../../assets/icons/check-mark.png')}
-            />
-            <View style={{marginTop: 40}}>
-              <Text style={styles.bigText}>Great!</Text>
-              <Text style={styles.bigText}>You're all set!</Text>
-            </View>
-          </View>
-        </View>
+        {newProfile ? this.renderPicker() : null}
+        {this.state.role === AppRole.freelancer ? this.renderDomain() : null}
+        {this.renderAllSet()}
       </ScrollView>
     );
   }

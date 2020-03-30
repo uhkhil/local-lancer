@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Text, Button} from 'native-base';
+import {Text, Button, Spinner} from 'native-base';
 
 import styles from './AuthStyles';
 import {Auth} from '../../services/Auth';
@@ -31,21 +31,23 @@ class AuthScreen extends React.Component {
         <View style={styles.main}>
           {/* <View style={styles.iconContainer} /> */}
           <View style={styles.title}>
-            <Text style={styles.titleText1}>Local</Text>
-            <Text style={styles.titleText2}>Lancer</Text>
+            <Text style={styles.titleText1}>local</Text>
+            <Text style={styles.titleText2}>lancer</Text>
           </View>
-          <Text style={styles.subtitleText}>Freelancing done right</Text>
+          <Text style={styles.subtitleText}>Work | Hire</Text>
         </View>
         <View style={styles.ctas}>
           <Button
-            bordered
-            success
+            rounded
+            transparent
             disabled={loading}
             style={styles.buttonSignin}
             onPress={this.signIn}>
-            <Text style={styles.buttonSigninText}>
-              {loading ? 'Loading...' : 'Sign In'}
-            </Text>
+            {!loading ? (
+              <Text style={styles.buttonSigninText}>Let's go</Text>
+            ) : (
+              <Spinner color="white" size="small" />
+            )}
           </Button>
         </View>
       </View>

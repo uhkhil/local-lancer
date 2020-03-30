@@ -11,6 +11,7 @@ Axios.interceptors.request.use(
       ...config.headers,
       Authorization: bearerToken,
     };
+    console.log('config', config);
     return config;
   },
   error => {
@@ -26,8 +27,13 @@ const updateUser = data => Axios.patch(`${baseUrl}/users`, data);
 const createFreelancerProfile = data =>
   Axios.post(`${baseUrl}/freelancerProfiles`, data);
 const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancerProfiles`);
+const updateFreelancerProfile = data =>
+  Axios.patch(`${baseUrl}/freelancerProfiles`, data);
 const createRecruiterProfile = data =>
   Axios.post(`${baseUrl}/recruiterProfiles`, data);
+const getRecruiterProfile = () => Axios.get(`${baseUrl}/recruiterProfiles`);
+const updateRecruiterProfile = data =>
+  Axios.patch(`${baseUrl}/recruiterProfiles`, data);
 const createProject = data => Axios.post(`${baseUrl}/projects`, data);
 const getProjects = () => Axios.get(`${baseUrl}/projects`);
 const exploreProjects = coords =>
@@ -69,7 +75,10 @@ export const Api = {
   updateUser,
   createFreelancerProfile,
   getFreelancerProfile,
+  updateFreelancerProfile,
   createRecruiterProfile,
+  getRecruiterProfile,
+  updateRecruiterProfile,
   createProject,
   getProjects,
   exploreProjects,

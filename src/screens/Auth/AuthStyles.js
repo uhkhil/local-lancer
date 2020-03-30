@@ -24,9 +24,12 @@ const styles = StyleSheet.create({
   },
   titleText1: {
     fontSize: 35,
+    fontWeight: 'normal',
+    color: '#44d0af',
   },
   titleText2: {
     fontSize: 35,
+    fontWeight: 'bold',
     color: '#44d0af',
   },
   subtitleText: {

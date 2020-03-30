@@ -57,6 +57,7 @@ const storeUserInfo = (userContext, data) => {
 const postAuth = async (uid, userContext) => {
   try {
     const res = await Api.getUserInfo(uid);
+    console.log('postAuth -> res', res);
     const userInfo = res.data.data[0];
     storeUserInfo(userContext, userInfo);
   } catch (err) {
@@ -66,6 +67,7 @@ const postAuth = async (uid, userContext) => {
 
 const checkNavigationFlow = async (userContext, navigation, themeContext) => {
   const user = userContext.user;
+  console.log('checkNavigationFlow -> user', user);
   if (user.freelancerProfile) {
     userContext.setUserMode(AppRole.freelancer);
     themeContext.setTheme(AppRole.freelancer);
@@ -76,7 +78,7 @@ const checkNavigationFlow = async (userContext, navigation, themeContext) => {
     navigation.navigate('Home');
   } else {
     console.log('profile setup page');
-    navigation.navigate('ProfileSetup');
+    navigation.navigate('ProfileSetup', {newProfile: true});
   }
 };
 
