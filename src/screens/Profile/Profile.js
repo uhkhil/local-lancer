@@ -44,7 +44,11 @@ class ProfileScreen extends React.Component {
           <Button
             style={styles.editButton}
             transparent
-            onPress={() => this.props.navigation.navigate('ProfileEdit')}>
+            onPress={() =>
+              this.props.navigation.navigate('ProfileSetup', {
+                newProfile: false,
+              })
+            }>
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </Button>
         </View>
