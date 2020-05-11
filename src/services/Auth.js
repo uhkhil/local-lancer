@@ -11,6 +11,35 @@ const initSocialAuth = () => {
   });
 };
 
+const signUp = async (email, password) => {
+  debugger;
+  try {
+    const user = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// const signInWithEmail = async (email, password, userContext) => {
+//   try {
+//     if (!email || !password) {
+//       throw new Error('Credentials cannot be empty');
+//     }
+//     const credentials = await firebase
+//       .auth()
+//       .signInWithEmailAndPassword(email, password);
+
+//     return credentials;
+//   } catch (error) {
+//     console.warn(error);
+//     return null;
+//   }
+// };
+
+// TODO: This should return the user's account setup progress
 const signIn = async userContext => {
   try {
     await GoogleSignin.hasPlayServices();
@@ -25,9 +54,9 @@ const signIn = async userContext => {
       await Api.signedUp(result.additionalUserInfo.profile);
     }
     await postAuth(result.user.uid, userContext);
-    return true;
+    return result;
   } catch (error) {
-    return false;
+    return null;
   }
 };
 
@@ -84,7 +113,7 @@ const checkNavigationFlow = async (userContext, navigation, themeContext) => {
 
 export const Auth = {
   initSocialAuth,
-  // signUp,
+  signUp,
   signIn,
   signOut,
   postAuth,

@@ -11,7 +11,7 @@ class AuthLoadingScreen extends React.Component {
   async componentDidMount() {
     this.authStateSubscriber = auth().onAuthStateChanged(async user => {
       if (!user) {
-        this.props.navigation.navigate('Auth');
+        this.props.navigation.navigate('Onboarding');
       } else {
         await Auth.postAuth(user.uid, this.props.userContext);
         await Auth.checkNavigationFlow(
