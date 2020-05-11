@@ -19,6 +19,9 @@ import HomeScreen from './screens/Home/Home';
 import {Auth} from './services/Auth';
 import CardDetails from './screens/CardDetails/CardDetails';
 import {MatchedModal} from './screens/MatchedModal/MatchedModal';
+import EmailVerify from './screens/EmailVerify/EmailVerify';
+import OnboardingScreen from './screens/Onboarding/Onboarding';
+import RegistrationScreen from './screens/Registration/Registration';
 
 Auth.initSocialAuth();
 
@@ -47,6 +50,7 @@ const AuthStack = createStackNavigator(
     Auth: AuthScreen,
     Signup: SignupScreen,
     Signin: SigninScreen,
+    EmailVerify: EmailVerify,
   },
   {
     headerMode: 'none',
@@ -56,6 +60,8 @@ const AuthStack = createStackNavigator(
 const AppNavigator = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
+    Onboarding: OnboardingScreen,
+    Registration: RegistrationScreen,
     Auth: AuthStack,
     App: AppStack,
   },
