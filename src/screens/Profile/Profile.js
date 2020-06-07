@@ -18,7 +18,7 @@ class ProfileScreen extends React.Component {
         text: 'Yes',
         onPress: async () => {
           await Auth.signOut(this.props.userContext);
-          this.props.navigation.navigate('Auth');
+          this.props.navigation.navigate('Registration');
         },
       },
       {
@@ -45,7 +45,7 @@ class ProfileScreen extends React.Component {
             style={styles.editButton}
             transparent
             onPress={() =>
-              this.props.navigation.navigate('ProfileSetup', {
+              this.props.navigation.navigate('FreelancerSetup', {
                 newProfile: false,
               })
             }>

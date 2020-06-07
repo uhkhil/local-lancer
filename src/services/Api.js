@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {firebase} from '@react-native-firebase/auth';
-const baseUrl = 'https://0628719c.ngrok.io/api/v0';
+const baseUrl = 'https://local-lancer-server-staging.herokuapp.com';
 
 // Add necessary headers like Auth
 Axios.interceptors.request.use(
@@ -21,14 +21,25 @@ Axios.interceptors.request.use(
 
 // TODO: Handle 403 responses
 
+/**
+ *
+ * @param {UserObj} data
+ * Create a user record in the DB if it does not exist
+ */
 const signedUp = data => Axios.post(`${baseUrl}/users`, data);
+
+/**
+ * Fetch user record from the DB and associated recruiter/freelancer profiles if any
+ */
 const getUserInfo = () => Axios.get(`${baseUrl}/users`);
+
+const getDomains = () => Axios.get(`${baseUrl}/domains`);
 const updateUser = data => Axios.patch(`${baseUrl}/users`, data);
 const createFreelancerProfile = data =>
-  Axios.post(`${baseUrl}/freelancerProfiles`, data);
-const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancerProfiles`);
+  Axios.post(`${baseUrl}/freelancers`, data);
+const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancers`);
 const updateFreelancerProfile = data =>
-  Axios.patch(`${baseUrl}/freelancerProfiles`, data);
+  Axios.patch(`${baseUrl}/freelancers`, data);
 const createRecruiterProfile = data =>
   Axios.post(`${baseUrl}/recruiterProfiles`, data);
 const getRecruiterProfile = () => Axios.get(`${baseUrl}/recruiterProfiles`);
@@ -72,6 +83,7 @@ const getUserCard = role =>
 export const Api = {
   signedUp,
   getUserInfo,
+  getDomains,
   updateUser,
   createFreelancerProfile,
   getFreelancerProfile,

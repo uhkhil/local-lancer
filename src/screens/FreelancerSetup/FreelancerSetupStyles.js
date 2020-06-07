@@ -92,6 +92,28 @@ const styles = StyleSheet.create({
   hidden: {
     opacity: 0,
   },
+  chipsPacket: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  chip: {
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 50,
+    backgroundColor: 'transparent',
+    // width: 200,
+    margin: 10,
+  },
+  chipSelected: {
+    backgroundColor: 'white',
+  },
+  chipText: {
+    color: 'white',
+  },
+  chipTextSelected: {
+    color: 'black',
+  },
 });
 
 export default styles;

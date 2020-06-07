@@ -27,6 +27,7 @@ const totalPages = 3;
  */
 class RegistrationScreen extends React.Component {
   state = {
+    role: null,
     theme: FreelancerTheme,
     signingIn: false,
     signedIn: false,
@@ -43,22 +44,46 @@ class RegistrationScreen extends React.Component {
     } else {
       theme = RecruiterTheme;
     }
-    this.setState({theme});
+    this.setState({theme, role});
   };
 
   login = async () => {
     this.setState({signingIn: true});
     const signedIn = await Auth.signIn(this.props.userContext);
-    // if user registered
+    console.log('RegistrationScreen -> login -> signedIn', signedIn);
+    const {profile} = signedIn.additionalUserInfo;
+    console.log('RegistrationScreen -> login -> profile', profile);
+    this.setState({
+      firstName: profile.given_name,
+      lastName: profile.family_name,
+    });
+    console.log(this.props);
+    const {user} = this.props.userContext;
+
     // if profile setup
+    if (user.freelancerProfile || user.recruiterProfile) {
+      // TODO: Take me home...
+      console.log('Will navigate outta here...');
+      this.props.navigation.navigate('Home');
+    }
     this.setState({signingIn: false, signedIn: true});
   };
 
   done = () => {
+    const {role} = this.state;
+
+    // Do an update call if the name is changed.
     this.setState({saving: true});
-    setTimeout(() => {
-      this.setState({saving: false});
-    }, 3000);
+    // setTimeout(() => {
+    //   this.setState({saving: false});
+    // }, 3000);
+
+    // Send to the selected profile setup.
+    if (role === AppRole.freelancer) {
+      this.props.navigation.navigate('FreelancerSetup', {newProfile: true});
+    } else {
+      this.props.navigation.navigate('ProjectAdd', {newProfile: true});
+    }
   };
 
   prev = () => {
@@ -97,14 +122,17 @@ class RegistrationScreen extends React.Component {
     );
   };
 
-  footer = (theme, loading = false, last = false) => {
+  footer = (theme, loading = false, last = false, hidden = false) => {
     let action = this.next;
     if (last) {
       action = this.done;
     }
     return (
       <View style={styles.footer}>
-        <Button style={styles.nextButton} onPress={action} disabled={loading}>
+        <Button
+          style={[styles.nextButton, hidden ? styles.hidden : null]}
+          onPress={action}
+          disabled={loading || hidden}>
           {loading ? (
             <Spinner color={theme.primary} />
           ) : (
@@ -120,7 +148,7 @@ class RegistrationScreen extends React.Component {
   };
 
   roleSelector = () => {
-    const {theme} = this.state;
+    const {theme, role} = this.state;
     return (
       <View style={[styles.slide]}>
         {this.header(true)}
@@ -141,7 +169,7 @@ class RegistrationScreen extends React.Component {
             </Button>
           </View>
         </View>
-        {this.footer(theme)}
+        {this.footer(theme, false, false, role === null)}
       </View>
     );
   };
@@ -157,10 +185,13 @@ class RegistrationScreen extends React.Component {
               rounded
               iconLeft
               style={[styles.googleButton]}
-              disabled={signedIn}
+              disabled={signedIn || signingIn}
               onPress={this.login}>
               {signedIn ? (
                 <Icon name="check" type="FontAwesome" style={theme.color} />
+              ) : null}
+              {signingIn ? (
+                <Spinner size="small" color={theme.primary} />
               ) : null}
               <Text style={[styles.roleButtonText, theme.color]}>
                 {signedIn ? 'Linked Google' : 'Link Google'}
@@ -168,7 +199,7 @@ class RegistrationScreen extends React.Component {
             </Button>
           </View>
         </View>
-        {this.footer(theme, signingIn)}
+        {this.footer(theme, signingIn, false, !signedIn)}
       </View>
     );
   };
@@ -179,7 +210,7 @@ class RegistrationScreen extends React.Component {
       <View style={[styles.slide]}>
         {this.header()}
         <View style={[styles.main, styles.nameEditor]}>
-          <Text style={styles.actionText}>Did we say it, right?</Text>
+          <Text style={styles.actionText}>Did we get it right?</Text>
           <Form style={styles.nameForm}>
             <Item stackedLabel>
               <Label style={styles.label}>First Name</Label>
@@ -212,7 +243,7 @@ class RegistrationScreen extends React.Component {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        scrollEnabled={true}
+        scrollEnabled={false}
         style={{backgroundColor: theme.primary}}>
         {this.roleSelector()}
         {this.accountLinker()}

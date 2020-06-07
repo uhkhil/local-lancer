@@ -39,7 +39,11 @@ const signUp = async (email, password) => {
 //   }
 // };
 
-// TODO: This should return the user's account setup progress
+/**
+ *
+ * @param {object} userContext - The user userContext which will be used to store the user's information
+ * Signin/singup a user with Google, create an account in the DB if new user
+ */
 const signIn = async userContext => {
   try {
     await GoogleSignin.hasPlayServices();
@@ -86,8 +90,7 @@ const storeUserInfo = (userContext, data) => {
 const postAuth = async (uid, userContext) => {
   try {
     const res = await Api.getUserInfo(uid);
-    console.log('postAuth -> res', res);
-    const userInfo = res.data.data[0];
+    const userInfo = res.data.data;
     storeUserInfo(userContext, userInfo);
   } catch (err) {
     console.warn(err);
@@ -107,7 +110,7 @@ const checkNavigationFlow = async (userContext, navigation, themeContext) => {
     navigation.navigate('Home');
   } else {
     console.log('profile setup page');
-    navigation.navigate('ProfileSetup', {newProfile: true});
+    navigation.navigate('FreelancerSetup', {newProfile: true});
   }
 };
 

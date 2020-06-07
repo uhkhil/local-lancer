@@ -22,6 +22,7 @@ import {MatchedModal} from './screens/MatchedModal/MatchedModal';
 import EmailVerify from './screens/EmailVerify/EmailVerify';
 import OnboardingScreen from './screens/Onboarding/Onboarding';
 import RegistrationScreen from './screens/Registration/Registration';
+import FreelancerSetupScreen from './screens/FreelancerSetup/FreelancerSetup';
 
 Auth.initSocialAuth();
 
@@ -36,6 +37,7 @@ const AppStack = createStackNavigator(
     About: AboutScreen,
     ProjectAdd: ProjectAddScreen,
     ProfileSetup: ProfileSetupScreen,
+    FreelancerSetup: FreelancerSetupScreen,
     ProjectList: ProjectListScreen,
     CardDetails: CardDetails,
     MatchedModal: MatchedModal,
