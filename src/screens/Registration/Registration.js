@@ -13,7 +13,7 @@ import {
 import {Wrapper} from '../../hocs/Wrapper';
 import {ScrollView, Dimensions} from 'react-native';
 import styles from './RegistrationStyles';
-import {FreelancerTheme, RecruiterTheme} from '../../theme/Theme';
+import {FreelancerTheme, RecruiterTheme, MixedTheme} from '../../theme/Theme';
 import {AppRole} from '../../enums/AppRole';
 import {Auth} from '../../services/Auth';
 
@@ -28,7 +28,7 @@ const totalPages = 3;
 class RegistrationScreen extends React.Component {
   state = {
     role: null,
-    theme: FreelancerTheme,
+    theme: MixedTheme,
     signingIn: false,
     signedIn: false,
     saving: false,
@@ -62,9 +62,9 @@ class RegistrationScreen extends React.Component {
 
     // if profile setup
     if (user.freelancerProfile || user.recruiterProfile) {
-      // TODO: Take me home...
-      console.log('Will navigate outta here...');
+      this.setState({signingIn: false, signedIn: true});
       this.props.navigation.navigate('Home');
+      return;
     }
     this.setState({signingIn: false, signedIn: true});
   };
@@ -72,7 +72,7 @@ class RegistrationScreen extends React.Component {
   done = () => {
     const {role} = this.state;
 
-    // Do an update call if the name is changed.
+    // TODO: Do an update call if the name is changed.
     this.setState({saving: true});
     // setTimeout(() => {
     //   this.setState({saving: false});

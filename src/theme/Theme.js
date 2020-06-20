@@ -18,6 +18,7 @@ export const Fonts = {
 
 const greenish = '#44d0af';
 const bluish = '#24d7fa';
+const mixed = '#33d3d5';
 
 export const FreelancerTheme = {
   primary: greenish,
@@ -38,6 +39,17 @@ export const RecruiterTheme = {
   },
   color: {
     color: bluish,
+  },
+};
+
+export const MixedTheme = {
+  primary: mixed,
+  otherPrimary: greenish,
+  background: {
+    backgroundColor: mixed,
+  },
+  color: {
+    color: mixed,
   },
 };
 
