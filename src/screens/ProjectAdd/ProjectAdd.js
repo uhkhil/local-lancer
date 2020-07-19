@@ -63,10 +63,9 @@ class ProjectAdd extends React.Component {
       title,
       description,
       domains: selectedDomains,
-      days: parseInt(days),
+      days: parseInt(days, 10),
       userId: this.user._id,
     };
-    console.log(JSON.stringify(body));
     Api.createProject(body).then(res => {
       this.next();
       this.updateList();

@@ -12,7 +12,6 @@ const initSocialAuth = () => {
 };
 
 const signUp = async (email, password) => {
-  debugger;
   try {
     const user = await firebase
       .auth()
@@ -55,7 +54,12 @@ const signIn = async userContext => {
     );
     const result = await firebase.auth().signInWithCredential(credential);
     if (result.additionalUserInfo.isNewUser) {
-      await Api.signedUp(result.additionalUserInfo.profile);
+      const {profile} = result.additionalUserInfo;
+      const userObj = {
+        firstName: profile.given_name,
+        lastName: profile.family_name,
+      };
+      await Api.signedUp(userObj);
     }
     await postAuth(result.user.uid, userContext);
     return result;
@@ -99,7 +103,6 @@ const postAuth = async (uid, userContext) => {
 
 const checkNavigationFlow = async (userContext, navigation, themeContext) => {
   const user = userContext.user;
-  console.log('checkNavigationFlow -> user', user);
   if (user.freelancerProfile) {
     userContext.setUserMode(AppRole.freelancer);
     themeContext.setTheme(AppRole.freelancer);
@@ -109,8 +112,7 @@ const checkNavigationFlow = async (userContext, navigation, themeContext) => {
     themeContext.setTheme(AppRole.recruiter);
     navigation.navigate('Home');
   } else {
-    console.log('profile setup page');
-    navigation.navigate('FreelancerSetup', {newProfile: true});
+    navigation.navigate('Registration', {newProfile: true});
   }
 };
 

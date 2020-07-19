@@ -12,22 +12,22 @@ import {
 } from 'native-base';
 import {Wrapper} from '../../hocs/Wrapper';
 import {ScrollView, Dimensions, ToastAndroid} from 'react-native';
-import styles from './FreelancerSetupStyles';
-import {FreelancerTheme} from '../../theme/Theme';
+import styles from './RecruiterSetupStyles';
+import {RecruiterTheme} from '../../theme/Theme';
 import {Api} from '../../services/Api';
 
 const {width} = Dimensions.get('window');
 const totalPages = 5;
 
-class FreelancerSetupScreen extends React.Component {
+class RecruiterSetupScreen extends React.Component {
   state = {
-    theme: FreelancerTheme,
+    theme: RecruiterTheme,
     submitting: false,
     currentPage: 0,
-    domains: [],
-    bio: '',
-    link: '',
+    title: '',
     allDomains: [],
+    domains: [],
+    description: '',
     initialLoading: false,
     newProfile: null,
   };
@@ -94,28 +94,28 @@ class FreelancerSetupScreen extends React.Component {
   };
 
   submit = async () => {
-    const {domains, bio, link, newProfile} = this.state;
+    const {domains, title, description, newProfile} = this.state;
     this.setState({submitting: true});
 
-    if (!domains?.length) {
+    if (!title) {
       return;
-    } else if (!bio) {
+    } else if (!domains.length) {
       return;
-    } else if (!link) {
+    } else if (!description) {
       return;
     }
 
     const requestObj = {
+      title,
       domains: domains.map(domain => domain._id),
-      bio: bio,
-      link: link,
+      description: description,
     };
 
     let apiResponse;
     if (newProfile) {
-      apiResponse = await Api.createFreelancerProfile(requestObj);
+      apiResponse = await Api.createProject(requestObj);
     } else {
-      apiResponse = await Api.updateFreelancerProfile(requestObj);
+      apiResponse = await Api.editProject(requestObj);
     }
 
     this.setState({submitting: false});
@@ -174,10 +174,33 @@ class FreelancerSetupScreen extends React.Component {
         {this.header(true)}
         <View style={[styles.main, styles.nameEditor]}>
           <Text style={styles.actionText}>
-            Welcome! Let's create your freelancer profile.
+            Welcome! Let's add your first project.
           </Text>
         </View>
         {this.footer(theme, initialLoading)}
+      </View>
+    );
+  };
+
+  title = () => {
+    const {theme, title} = this.state;
+    return (
+      <View style={[styles.slide]}>
+        {this.header()}
+        <View style={[styles.main, styles.nameEditor]}>
+          <Text style={styles.actionText}>What are you looking for?</Text>
+          <Form style={styles.nameForm}>
+            <Item stackedLabel>
+              <Input
+                placeholder="Website Developer for an NGO"
+                style={styles.input}
+                value={title}
+                onChangeText={text => this.setState({title: text})}
+              />
+            </Item>
+          </Form>
+        </View>
+        {this.footer(theme, false, false, !title)}
       </View>
     );
   };
@@ -189,7 +212,7 @@ class FreelancerSetupScreen extends React.Component {
         {this.header()}
         <View style={[styles.main, styles.nameEditor]}>
           <Text style={styles.actionText}>
-            Select your area of expertise. Upto 3.
+            Select the domain of your project.
           </Text>
           <View style={styles.chipsPacket}>
             {allDomains.map(domain => (
@@ -216,54 +239,54 @@ class FreelancerSetupScreen extends React.Component {
     );
   };
 
-  bio = () => {
-    const {theme, bio} = this.state;
+  description = () => {
+    const {theme, description} = this.state;
     return (
       <View style={[styles.slide]}>
         {this.header()}
         <View style={[styles.main, styles.nameEditor]}>
-          <Text style={styles.actionText}>Let's add a short bio</Text>
+          <Text style={styles.actionText}>Let's add a short description</Text>
           <Form style={styles.nameForm}>
             <Item stackedLabel>
               <Textarea
                 style={styles.input}
-                value={bio}
+                value={description}
                 numberOfLines={5}
-                placeholder="I am a professional wildife photographer with 3+ years of experience. I have shot ..."
-                onChangeText={text => this.setState({bio: text})}
+                placeholder="Looking for a developer for a kick-ass idea..."
+                onChangeText={text => this.setState({description: text})}
               />
             </Item>
           </Form>
         </View>
-        {this.footer(theme, false, false, !bio)}
+        {this.footer(theme, false, false, !description)}
       </View>
     );
   };
 
-  link = () => {
-    const {theme, link} = this.state;
-    return (
-      <View style={[styles.slide]}>
-        {this.header()}
-        <View style={[styles.main, styles.nameEditor]}>
-          <Text style={styles.actionText}>
-            Let's add a link to your portfolio
-          </Text>
-          <Form style={styles.nameForm}>
-            <Item stackedLabel>
-              <Input
-                placeholder="Behance/Github/Personal website"
-                style={styles.input}
-                value={link}
-                onChangeText={text => this.setState({link: text})}
-              />
-            </Item>
-          </Form>
-        </View>
-        {this.footer(theme, false, false, !link)}
-      </View>
-    );
-  };
+  // link = () => {
+  //   const {theme, link} = this.state;
+  //   return (
+  //     <View style={[styles.slide]}>
+  //       {this.header()}
+  //       <View style={[styles.main, styles.nameEditor]}>
+  //         <Text style={styles.actionText}>
+  //           Let's add a link to your portfolio
+  //         </Text>
+  //         <Form style={styles.nameForm}>
+  //           <Item stackedLabel>
+  //             <Input
+  //               placeholder="Behance/Github/Personal website"
+  //               style={styles.input}
+  //               value={link}
+  //               onChangeText={text => this.setState({link: text})}
+  //             />
+  //           </Item>
+  //         </Form>
+  //       </View>
+  //       {this.footer(theme, false, false, !link)}
+  //     </View>
+  //   );
+  // };
 
   done = () => {
     const {theme, submitting} = this.state;
@@ -303,13 +326,13 @@ class FreelancerSetupScreen extends React.Component {
         scrollEnabled={false}
         style={{backgroundColor: theme.primary}}>
         {this.welcome()}
+        {this.title()}
         {this.domainSelector()}
-        {this.bio()}
-        {this.link()}
+        {this.description()}
         {this.done()}
       </ScrollView>
     );
   }
 }
 
-export default Wrapper(FreelancerSetupScreen);
+export default Wrapper(RecruiterSetupScreen);

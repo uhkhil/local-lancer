@@ -104,15 +104,19 @@ class HomeScreen extends React.Component {
     let response;
     const {longitude, latitude} = this.state.currentLocation;
     this.setState({loading: true});
-    switch (this.props.userContext.userMode) {
-      case AppRole.freelancer:
-        response = await Api.exploreProjects({longitude, latitude});
-        this.setState({cards: response.data.data});
-        break;
-      case AppRole.recruiter:
-        response = await Api.exploreFreelancers({longitude, latitude});
-        this.setState({cards: response.data.data});
-        break;
+    try {
+      switch (this.props.userContext.userMode) {
+        case AppRole.freelancer:
+          response = await Api.exploreProjects({longitude, latitude});
+          this.setState({cards: response.data.data});
+          break;
+        case AppRole.recruiter:
+          response = await Api.exploreFreelancers({longitude, latitude});
+          this.setState({cards: response.data.data});
+          break;
+      }
+    } catch (error) {
+      // Something went wrong
     }
     this.setState({loading: false});
   };

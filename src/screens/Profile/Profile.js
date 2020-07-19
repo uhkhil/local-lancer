@@ -23,7 +23,7 @@ class ProfileScreen extends React.Component {
       },
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
+        onPress: () => {},
         style: 'cancel',
       },
     ]);
@@ -49,25 +49,25 @@ class ProfileScreen extends React.Component {
                 newProfile: false,
               })
             }>
-            <Text style={styles.editButtonText}>Edit Profile</Text>
+            {/* <Text style={styles.editButtonText}>Edit Profile</Text> */}
           </Button>
         </View>
         <View>
           <List style={styles.list}>
-            <ListItem
+            {/* <ListItem
               noBorder
               style={styles.item}
               onPress={() => this.props.navigation.navigate('MyPortfolio')}>
               <Text style={styles.itemText}>My Card</Text>
-            </ListItem>
-            {userMode === AppRole.recruiter ? (
+            </ListItem> */}
+            {/* {userMode === AppRole.recruiter ? (
               <ListItem
                 noBorder
                 style={styles.item}
                 onPress={() => this.props.navigation.navigate('ProjectList')}>
                 <Text style={styles.itemText}>My Projects</Text>
               </ListItem>
-            ) : null}
+            ) : null} */}
             <ListItem
               noBorder
               style={styles.item}

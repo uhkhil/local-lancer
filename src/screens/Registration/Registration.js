@@ -16,6 +16,7 @@ import styles from './RegistrationStyles';
 import {FreelancerTheme, RecruiterTheme, MixedTheme} from '../../theme/Theme';
 import {AppRole} from '../../enums/AppRole';
 import {Auth} from '../../services/Auth';
+import {Api} from '../../services/Api';
 
 const {width} = Dimensions.get('window');
 const totalPages = 3;
@@ -39,37 +40,49 @@ class RegistrationScreen extends React.Component {
 
   changeRole = role => {
     let theme;
+    const themeContext = this.props.theme;
     if (role === AppRole.freelancer) {
       theme = FreelancerTheme;
     } else {
       theme = RecruiterTheme;
     }
+    themeContext.setTheme(AppRole.freelancer);
     this.setState({theme, role});
   };
 
   login = async () => {
+    const {theme} = this.props;
     this.setState({signingIn: true});
     const signedIn = await Auth.signIn(this.props.userContext);
-    console.log('RegistrationScreen -> login -> signedIn', signedIn);
     const {profile} = signedIn.additionalUserInfo;
-    console.log('RegistrationScreen -> login -> profile', profile);
     this.setState({
       firstName: profile.given_name,
       lastName: profile.family_name,
     });
-    console.log(this.props);
     const {user} = this.props.userContext;
 
     // if profile setup
-    if (user.freelancerProfile || user.recruiterProfile) {
+    if (user.freelancerProfile) {
       this.setState({signingIn: false, signedIn: true});
+      theme.setTheme(AppRole.freelancer);
       this.props.navigation.navigate('Home');
       return;
+    } else if (user.recruiterProfile) {
+      theme.setTheme(AppRole.recruiter);
+      this.setState({signingIn: false, signedIn: true});
+      // Check if project is created.
+      if (user.projects?.length) {
+        this.props.navigation.navigate('Home');
+      } else {
+        this.props.navigation.navigate('RecruiterSetup', {newProfile: true});
+      }
+      return;
+    } else {
+      this.setState({signingIn: false, signedIn: true});
     }
-    this.setState({signingIn: false, signedIn: true});
   };
 
-  done = () => {
+  done = async () => {
     const {role} = this.state;
 
     // TODO: Do an update call if the name is changed.
@@ -79,10 +92,13 @@ class RegistrationScreen extends React.Component {
     // }, 3000);
 
     // Send to the selected profile setup.
+    this.setState({saving: false});
     if (role === AppRole.freelancer) {
       this.props.navigation.navigate('FreelancerSetup', {newProfile: true});
     } else {
-      this.props.navigation.navigate('ProjectAdd', {newProfile: true});
+      // Create the recruiter profile
+      await Api.createRecruiterProfile({});
+      this.props.navigation.navigate('RecruiterSetup', {newProfile: true});
     }
   };
 

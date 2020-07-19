@@ -33,7 +33,6 @@ class SignupScreen extends React.Component {
     // Validate
     const {email, password} = this.state;
     if (!email || !password) {
-      console.log('incorrect credentials');
       return;
     }
     await Auth.signUp(email, password);

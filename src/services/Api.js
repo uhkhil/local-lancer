@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {firebase} from '@react-native-firebase/auth';
-const baseUrl = 'https://local-lancer-server-staging.herokuapp.com';
+const baseUrl = 'https://local-lancer-server.herokuapp.com';
 
 // Add necessary headers like Auth
 Axios.interceptors.request.use(
@@ -41,11 +41,12 @@ const getFreelancerProfile = () => Axios.get(`${baseUrl}/freelancers`);
 const updateFreelancerProfile = data =>
   Axios.patch(`${baseUrl}/freelancers`, data);
 const createRecruiterProfile = data =>
-  Axios.post(`${baseUrl}/recruiterProfiles`, data);
-const getRecruiterProfile = () => Axios.get(`${baseUrl}/recruiterProfiles`);
+  Axios.post(`${baseUrl}/recruiters`, data);
+const getRecruiterProfile = () => Axios.get(`${baseUrl}/recruiters`);
 const updateRecruiterProfile = data =>
-  Axios.patch(`${baseUrl}/recruiterProfiles`, data);
+  Axios.patch(`${baseUrl}/recruiters`, data);
 const createProject = data => Axios.post(`${baseUrl}/projects`, data);
+const editProject = data => Axios.patch(`${baseUrl}/projects`, data);
 const getProjects = () => Axios.get(`${baseUrl}/projects`);
 const exploreProjects = coords =>
   Axios.post(`${baseUrl}/exploreProjects`, {
@@ -92,6 +93,7 @@ export const Api = {
   getRecruiterProfile,
   updateRecruiterProfile,
   createProject,
+  editProject,
   getProjects,
   exploreProjects,
   swipeProject,

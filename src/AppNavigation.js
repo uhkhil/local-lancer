@@ -23,6 +23,7 @@ import EmailVerify from './screens/EmailVerify/EmailVerify';
 import OnboardingScreen from './screens/Onboarding/Onboarding';
 import RegistrationScreen from './screens/Registration/Registration';
 import FreelancerSetupScreen from './screens/FreelancerSetup/FreelancerSetup';
+import RecruiterSetupScreen from './screens/RecruiterSetup/RecruiterSetup';
 
 Auth.initSocialAuth();
 
@@ -38,6 +39,7 @@ const AppStack = createStackNavigator(
     ProjectAdd: ProjectAddScreen,
     ProfileSetup: ProfileSetupScreen,
     FreelancerSetup: FreelancerSetupScreen,
+    RecruiterSetup: RecruiterSetupScreen,
     ProjectList: ProjectListScreen,
     CardDetails: CardDetails,
     MatchedModal: MatchedModal,
